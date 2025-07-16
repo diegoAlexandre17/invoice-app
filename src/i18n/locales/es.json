@@ -1,0 +1,44 @@
+{
+  "common": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "auth": {
+    "loginTitle": "Bienvenido de Vuelta",
+    "loginSubtitle": "Inicia sesión en tu cuenta",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
+    "loginButton": "Iniciar Sesión"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "invoices": "Facturas",
+    "clients": "Clientes",
+    "settings": "Configuración"
+  },
+  "invoice": {
+    "title": "Factura",
+    "newInvoice": "Nueva Factura",
+    "invoiceNumber": "Número de Factura",
+    "date": "Fecha",
+    "dueDate": "Fecha de Vencimiento",
+    "client": "Cliente",
+    "amount": "Monto",
+    "status": "Estado",
+    "actions": "Acciones"
+  }
+} 

@@ -9,11 +9,11 @@ const Router = () => {
   let element = useRoutes([
     {
       path: "/",
-      element: <Home />,
+      element: <Login /> ,
     },
     {
-      path: "/login",
-      element: <Login />,
+      path: "/admin",
+      element: <Home />,
     },
   ]);
 
