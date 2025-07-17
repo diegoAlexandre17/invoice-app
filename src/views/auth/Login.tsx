@@ -1,12 +1,13 @@
-import { useTranslation } from "../hooks/useTranslation";
-import LanguageSwitcher from "../components/LanguageSwitcher";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Button } from "../components/ui/button";
+import { useTranslation } from "../../hooks/useTranslation";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
@@ -152,12 +153,12 @@ const Login = () => {
 
               <div className="flex items-center justify-between">
                 <div className="text-sm">
-                  <a
-                    href="#"
+                  <Link
+                    to="/register"
                     className="font-medium text-blue-600 hover:text-blue-500"
                   >
                     {t("auth.forgotPassword")}
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -173,12 +174,12 @@ const Login = () => {
               <div className="text-center">
                 <p className="text-sm text-gray-600">
                   {t("auth.noAccount")}{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to="/register"
                     className="font-medium text-blue-600 hover:text-blue-500"
                   >
                     {t("auth.signUp")}
-                  </a>
+                  </Link>
                 </p>
               </div>
             </form>

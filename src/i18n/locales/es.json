@@ -11,7 +11,8 @@
     "delete": "Eliminar",
     "loading": "Cargando...",
     "error": "Error",
-    "success": "Éxito"
+    "success": "Éxito",
+    "name": "Nombre"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
@@ -20,11 +21,19 @@
     "passwordPlaceholder": "Ingresa tu contraseña",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes una cuenta?",
+    "haveAccount": "¿Ya tienes una cuenta?",
+    "signIn": "Ingresar",
     "signUp": "Regístrate",
     "loginButton": "Iniciar Sesión",
     "emailRequired":"Introduzca una dirección de correo electrónico válida",
     "passwordRequired":"La contraseña es requerida",
-    "passwordRequired8":"La contraseña debe contener mínimo 8 caracteres"  
+    "passwordRequired8":"La contraseña debe contener mínimo 8 caracteres",
+    "nameRequired":"El nombre es requerido",
+    "registerTitle":"Regístrate",
+    "registerSubtitle":"Crea una cuenta para continuar",
+    "namePlaceholder":"Ingresa tu nombre",
+    "confirmPasswordPlaceholder":"Confirma tu contraseña",
+    "registerButton":"Regístrate"
   },
   "navigation": {
     "home": "Inicio",

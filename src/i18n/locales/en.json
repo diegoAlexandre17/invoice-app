@@ -11,7 +11,8 @@
     "delete": "Delete",
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "name": "Name"
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -19,12 +20,20 @@
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot password?",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in",
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
     "loginButton": "Sign In",
     "emailRequired":"Please enter a valid email address",
     "passwordRequired":"Password is required",
-    "passwordRequired8":"The password must contain at least 8 characters"  
+    "passwordRequired8":"The password must contain at least 8 characters",
+    "nameRequired":"The name is required",
+    "registerTitle":"Register",
+    "registerSubtitle":"Create an account to continue",
+    "namePlaceholder":"Enter your name",
+    "confirmPasswordPlaceholder":"Confirm your password",
+    "registerButton":"Register"
   },
   "navigation": {
     "home": "Home",
