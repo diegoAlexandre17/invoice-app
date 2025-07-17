@@ -22,7 +22,7 @@ const LanguageSwitcher: React.FC = () => {
 
   return (
     <Select value={currentLanguage} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="">
         <SelectValue>
           {languages.find((lang) => lang.code === currentLanguage)?.flag}
         </SelectValue>
