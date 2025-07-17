@@ -10,11 +10,10 @@ import { useState } from "react";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
-  email: z.email("Please enter a valid email address"),
+  email: z.email("emailRequired"),
   password: z
     .string()
-    .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters"),
+    .min(1, "passwordRequired")
 });
 
 // Tipo TypeScript derivado del esquema
@@ -111,7 +110,7 @@ const Login = () => {
                   />
                   {errors.email && (
                     <small className="text-red-500 mt-1">
-                      {errors.email.message}
+                      {t(`auth.${errors.email.message}`)}
                     </small>
                   )}
                   
@@ -138,7 +137,7 @@ const Login = () => {
                   />
                   {errors.password && (
                     <small className="text-red-500 mt-1">
-                      {errors.password.message}
+                       {t(`auth.${errors.password.message}`)}
                     </small>
                   )}
                 </div>

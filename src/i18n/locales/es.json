@@ -21,7 +21,10 @@
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes una cuenta?",
     "signUp": "Regístrate",
-    "loginButton": "Iniciar Sesión"
+    "loginButton": "Iniciar Sesión",
+    "emailRequired":"Introduzca una dirección de correo electrónico válida",
+    "passwordRequired":"La contraseña es requerida",
+    "passwordRequired8":"La contraseña debe contener mínimo 8 caracteres"  
   },
   "navigation": {
     "home": "Inicio",
