@@ -2,9 +2,11 @@ import { Navigate, useRoutes } from "react-router-dom";
 import { lazy } from "react";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 
+
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
 const Register = lazy(() => import("@/views/auth/Register"));
+const RecoveryPassword = lazy(() => import("@/views/auth/RecoveryPassword"));
 
 const Router = () => {
   let element = useRoutes([
@@ -19,6 +21,10 @@ const Router = () => {
     {
       path: "/register",
       element: <Register /> ,
+    },
+    {
+      path: "/recovery-password",
+      element: <RecoveryPassword /> ,
     },
     {
       path: "/admin",

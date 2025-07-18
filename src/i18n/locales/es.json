@@ -9,6 +9,7 @@
     "save": "Guardar",
     "edit": "Editar",
     "delete": "Eliminar",
+    "goBack":"Atrás",
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
@@ -36,7 +37,9 @@
     "confirmPasswordPlaceholder":"Confirma tu contraseña",
     "registerButton":"Regístrate",
     "registerSuccessTitle":"Registro exitoso",
-    "validateEmail":"Por favor valide su email y luego puede iniciar sesión en la plataforma"
+    "validateEmail":"Por favor valide su email y luego puede iniciar sesión en la plataforma",
+    "recoverPasswordSuccess":"Correo enviado exitosamente",
+    "recover":"Recuperar"
   },
   "navigation": {
     "home": "Inicio",

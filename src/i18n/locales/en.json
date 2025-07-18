@@ -9,6 +9,7 @@
     "save": "Save",
     "edit": "Edit",
     "delete": "Delete",
+    "goBack":"Back",
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
@@ -36,7 +37,9 @@
     "confirmPasswordPlaceholder":"Confirm your password",
     "registerButton":"Register",
     "registerSuccessTitle":"Successful registration",
-    "validateEmail":"Please validate your email and then you can login to the platform"
+    "validateEmail":"Please validate your email and then you can login to the platform",
+    "recoverPasswordSuccess":"Mail sent successfully",
+    "recover":"Recover"
   },
   "navigation": {
     "home": "Home",
