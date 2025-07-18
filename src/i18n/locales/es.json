@@ -21,6 +21,7 @@
     "loginSubtitle": "Inicia sesión en tu cuenta",
     "emailPlaceholder": "Ingresa tu correo electrónico",
     "passwordPlaceholder": "Ingresa tu contraseña",
+    "passwordResetPlaceholder": "Ingresa tu nueva contraseña",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "noAccount": "¿No tienes una cuenta?",
     "haveAccount": "¿Ya tienes una cuenta?",
@@ -40,6 +41,7 @@
     "validateEmail":"Por favor valide su email y luego puede iniciar sesión en la plataforma",
     "recoveryTitle":"Recuperar contraseña",
     "recoverPasswordSuccess":"Correo enviado exitosamente",
+    "resetPasswordSuccess":"Se cambio la contraseña exitosamente",
     "recover":"Recuperar"
   },
   "navigation": {

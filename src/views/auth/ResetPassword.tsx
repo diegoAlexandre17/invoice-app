@@ -6,23 +6,36 @@ import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
+import { useAuth } from "@/hooks/useAuth";
 
-// Esquema de validación con Zod
 const recoverySchema = z.object({
-  email: z.email("emailRequired"),
+  password: z.string().min(1, "passwordRequired"),
 });
 
 // Tipo TypeScript derivado del esquema
 type RecoveryFormData = z.infer<typeof recoverySchema>;
 
-const RecoveryPassword = () => {
+const RessetPassword = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      SweetModal(
+        "error",
+        t("common.error"),
+        t("auth.notAuthorized"),
+        t("common.Ok")
+      );
+      navigate("/login");
+    }
+  }, [user, loading, navigate, t]);
 
   const {
     register,
@@ -32,19 +45,16 @@ const RecoveryPassword = () => {
   } = useForm<RecoveryFormData>({
     resolver: zodResolver(recoverySchema),
     defaultValues: {
-      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (formData: RecoveryFormData) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.resetPasswordForEmail(
-        formData.email,
-        {
-          redirectTo: "/reset-password",
-        }
-      );
+      const { data, error } = await supabase.auth.updateUser({
+        password: formData.password,
+      });
 
       if (error) {
         setError("root", { message: error.message });
@@ -90,24 +100,26 @@ const RecoveryPassword = () => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label
-                    htmlFor="email"
+                    htmlFor="password"
                     className="text-sm font-medium text-gray-700"
                   >
-                    {`${t("common.email")} *`}
+                    {`${t("common.password")} *`}
                   </Label>
                   <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder={t("auth.emailPlaceholder")}
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    placeholder={t("auth.passwordResetPlaceholder")}
                     className={`w-full ${
-                      errors.email ? "border-red-500 focus:border-red-500" : ""
+                      errors.password
+                        ? "border-red-500 focus:border-red-500"
+                        : ""
                     }`}
-                    {...register("email")}
+                    {...register("password")}
                   />
-                  {errors.email && (
+                  {errors.password && (
                     <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.email.message}`)}
+                      {t(`auth.${errors.password.message}`)}
                     </small>
                   )}
                 </div>
@@ -119,19 +131,8 @@ const RecoveryPassword = () => {
                 size="lg"
                 disabled={isLoading}
               >
-                {isLoading ? t("common.loading") : t("auth.recover")}
+                {isLoading ? t("common.loading") : t("common.save")}
               </Button>
-
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  <Link
-                    to="/"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    {t("common.goBack")}
-                  </Link>
-                </p>
-              </div>
             </form>
           </div>
         </div>
@@ -143,4 +144,4 @@ const RecoveryPassword = () => {
   );
 };
 
-export default RecoveryPassword;
+export default RessetPassword;

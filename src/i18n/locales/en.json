@@ -21,6 +21,7 @@
     "loginSubtitle": "Sign in to your account",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
+    "passwordResetPlaceholder": "Enter your new password",
     "forgotPassword": "Forgot password?",
     "haveAccount": "Already have an account?",
     "signIn": "Sign in",
@@ -40,6 +41,7 @@
     "validateEmail":"Please validate your email and then you can login to the platform",
     "recoveryTitle":"Recover password",
     "recoverPasswordSuccess":"Mail sent successfully",
+    "resetPasswordSuccess":"Password changed successfully",
     "recover":"Recover"
   },
   "navigation": {
