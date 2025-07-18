@@ -72,8 +72,7 @@ const Login = () => {
           {/* Optional overlay or content for the image */}
           <div className="w-full h-full bg-opacity-20 flex items-center justify-center">
             <div className="text-center text-white">
-              <h1 className="text-4xl font-bold mb-4">Welcome Back</h1>
-              <p className="text-xl">Sign in to your account</p>
+              <h1 className="text-6xl font-bold mb-4">{t('auth.loginTitle')}</h1>
             </div>
           </div>
         </div>
