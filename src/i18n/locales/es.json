@@ -31,6 +31,7 @@
     "emailRequired":"Introduzca una dirección de correo electrónico válida",
     "passwordRequired":"La contraseña es requerida",
     "passwordRequired8":"La contraseña debe contener mínimo 8 caracteres",
+    "passwordRequiredPattern":"La contraseña debe tener números y letras",
     "nameRequired":"El nombre es requerido",
     "registerTitle":"Regístrate",
     "registerSubtitle":"Crea una cuenta para continuar",

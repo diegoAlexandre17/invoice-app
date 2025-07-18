@@ -13,7 +13,7 @@ import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
 
 const recoverySchema = z.object({
-  password: z.string().min(1, "passwordRequired"),
+  password: z.string().min(8, "passwordRequired8").regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
 });
 
 // Tipo TypeScript derivado del esquema

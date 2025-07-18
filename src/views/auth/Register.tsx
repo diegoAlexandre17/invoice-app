@@ -15,7 +15,7 @@ import SweetModal from "@/components/modals/SweetAlert";
 const registerSchema = z.object({
   name: z.string().min(1, "nameRequired"),
   email: z.email("emailRequired"),
-  password: z.string().min(8, "passwordRequired8"),
+  password: z.string().min(8, "passwordRequired8").regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
 });
 
 // Tipo TypeScript derivado del esquema

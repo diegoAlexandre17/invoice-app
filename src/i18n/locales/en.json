@@ -31,6 +31,7 @@
     "emailRequired":"Please enter a valid email address",
     "passwordRequired":"Password is required",
     "passwordRequired8":"The password must contain at least 8 characters",
+    "passwordRequiredPattern":"The password must have numbers and letters",
     "nameRequired":"The name is required",
     "registerTitle":"Register",
     "registerSubtitle":"Create an account to continue",
