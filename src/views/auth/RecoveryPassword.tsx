@@ -73,7 +73,7 @@ const RecoveryPassword = () => {
 
   return (
     <>
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-4 right-4 z-20 text-white">
         <LanguageSwitcher />
       </div>
       <div className="min-h-screen flex">
@@ -82,7 +82,7 @@ const RecoveryPassword = () => {
           <div className="max-w-md w-full space-y-8">
             <div className="flex items-center justify-center">
               <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                {t("auth.loginSubtitle")}
+                {t("auth.recoveryTitle")}
               </h2>
             </div>
 

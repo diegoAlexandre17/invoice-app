@@ -38,6 +38,7 @@
     "registerButton":"Register",
     "registerSuccessTitle":"Successful registration",
     "validateEmail":"Please validate your email and then you can login to the platform",
+    "recoveryTitle":"Recover password",
     "recoverPasswordSuccess":"Mail sent successfully",
     "recover":"Recover"
   },
