@@ -1,11 +1,10 @@
 import { Navigate, useRoutes } from "react-router-dom";
-
 import { lazy } from "react";
+import { ProtectedRoute } from "../components/ProtectedRoute";
 
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
 const Register = lazy(() => import("@/views/auth/Register"));
-
 
 const Router = () => {
   let element = useRoutes([
@@ -23,7 +22,11 @@ const Router = () => {
     },
     {
       path: "/admin",
-      element: <Home />,
+      element: (
+        <ProtectedRoute requireAuth={true}>
+          <Home />
+        </ProtectedRoute>
+      ),
     },
   ]);
 

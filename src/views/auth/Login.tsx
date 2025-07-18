@@ -6,7 +6,7 @@ import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 
@@ -60,6 +60,17 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log(event, session);
+      if (!session) {
+        navigate("/login");
+      } else {
+        navigate("/admin");
+      }
+    });
+  }, []);
 
   return (
     <>
