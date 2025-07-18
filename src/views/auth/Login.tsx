@@ -7,14 +7,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/supabase/client";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
   email: z.email("emailRequired"),
-  password: z
-    .string()
-    .min(1, "passwordRequired")
+  password: z.string().min(1, "passwordRequired"),
 });
 
 // Tipo TypeScript derivado del esquema
@@ -22,6 +21,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -37,23 +37,20 @@ const Login = () => {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (formData: LoginFormData) => {
     setIsLoading(true);
     try {
-      console.log("Form data:", data);
-      // Aquí puedes agregar tu lógica de autenticación con Supabase
-      // Por ejemplo:
-      // const { data: authData, error } = await supabase.auth.signInWithPassword({
-      //   email: data.email,
-      //   password: data.password,
-      // });
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
 
-      // if (error) {
-      //   setError("root", { message: error.message });
-      //   return;
-      // }
+      if (error) {
+        setError("root", { message: error.message });
+        return;
+      }
 
-      // Redirigir al usuario o actualizar el estado
+      navigate("/admin");
     } catch (error) {
       console.error("Login error:", error);
       setError("root", {
@@ -114,7 +111,6 @@ const Login = () => {
                       {t(`auth.${errors.email.message}`)}
                     </small>
                   )}
-                  
                 </div>
 
                 <div className="space-y-2">
@@ -138,7 +134,7 @@ const Login = () => {
                   />
                   {errors.password && (
                     <small className="text-red-500 mt-1">
-                       {t(`auth.${errors.password.message}`)}
+                      {t(`auth.${errors.password.message}`)}
                     </small>
                   )}
                 </div>
