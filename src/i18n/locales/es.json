@@ -12,7 +12,8 @@
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
-    "name": "Nombre"
+    "name": "Nombre",
+    "Ok":"Aceptar"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
@@ -33,7 +34,9 @@
     "registerSubtitle":"Crea una cuenta para continuar",
     "namePlaceholder":"Ingresa tu nombre",
     "confirmPasswordPlaceholder":"Confirma tu contraseña",
-    "registerButton":"Regístrate"
+    "registerButton":"Regístrate",
+    "registerSuccessTitle":"Registro exitoso",
+    "validateEmail":"Por favor valide su email y luego puede iniciar sesión en la plataforma"
   },
   "navigation": {
     "home": "Inicio",

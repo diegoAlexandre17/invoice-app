@@ -12,7 +12,8 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
-    "name": "Name"
+    "name": "Name",
+    "Ok":"Accept"
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -33,7 +34,9 @@
     "registerSubtitle":"Create an account to continue",
     "namePlaceholder":"Enter your name",
     "confirmPasswordPlaceholder":"Confirm your password",
-    "registerButton":"Register"
+    "registerButton":"Register",
+    "registerSuccessTitle":"Successful registration",
+    "validateEmail":"Please validate your email and then you can login to the platform"
   },
   "navigation": {
     "home": "Home",

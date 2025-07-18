@@ -7,14 +7,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "@/supabase/client";
+import SweetModal from "@/components/modals/SweetAlert";
 
 // Esquema de validación con Zod
 const registerSchema = z.object({
   name: z.string().min(1, "nameRequired"),
   email: z.email("emailRequired"),
   password: z.string().min(8, "passwordRequired8"),
-  required: z.string().min(1, "passwordRequired"),
 });
 
 // Tipo TypeScript derivado del esquema
@@ -23,6 +24,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 const Register = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -34,26 +36,40 @@ const Register = () => {
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (formData: RegisterFormData) => {
     setIsLoading(true);
     try {
-      console.log("Form data:", data);
-      // Aquí puedes agregar tu lógica de autenticación con Supabase
-      // Por ejemplo:
-      // const { data: authData, error } = await supabase.auth.signInWithPassword({
-      //   email: data.email,
-      //   password: data.password,
-      // });
+      console.log("Form data:", formData);
 
-      // if (error) {
-      //   setError("root", { message: error.message });
-      //   return;
-      // }
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.name,
+          },
+        },
+      });
 
-      // Redirigir al usuario o actualizar el estado
+      if (error) {
+        setError("root", { message: error.message });
+        return;
+      }
+
+      if (authData && !error) {
+        SweetModal(
+          "success",
+          t("auth.registerSuccessTitle"),
+          t("auth.validateEmail"),
+          t("common.Ok")
+        );
+
+        navigate("/login");
+      }
     } catch (error) {
       console.error("Login error:", error);
       setError("root", {
@@ -164,8 +180,6 @@ const Register = () => {
                   <p className="text-sm text-red-600">{errors.root.message}</p>
                 </div>
               )}
-
-              
 
               <Button
                 type="submit"
