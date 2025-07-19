@@ -46,8 +46,8 @@
     "recover":"Recuperar"
   },
   "navigation": {
-    "home": "Inicio",
-    "dashboard": "Panel",
+    "dashboard": "Dashboard",
+    "customers":"Clientes",
     "invoices": "Facturas",
     "clients": "Clientes",
     "settings": "Configuración"

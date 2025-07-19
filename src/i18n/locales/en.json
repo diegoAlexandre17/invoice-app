@@ -46,8 +46,8 @@
     "recover":"Recover"
   },
   "navigation": {
-    "home": "Home",
     "dashboard": "Dashboard",
+    "customers":"Customers",
     "invoices": "Invoices",
     "clients": "Clients",
     "settings": "Settings"

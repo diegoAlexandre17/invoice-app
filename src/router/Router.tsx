@@ -1,6 +1,7 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import { lazy } from "react";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+import MainLayout from "../components/MainLayout";
 
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
@@ -34,9 +35,14 @@ const Router = () => {
       path: "/admin",
       element: (
         <ProtectedRoute requireAuth={true}>
-          <Home />
+          <MainLayout />
         </ProtectedRoute>
       ),
+      children: [
+        { path: "/admin", element: <h1>Dashboard</h1> },
+        { path: "/admin/invoice", element: <h1>Invoice</h1> },
+        // Aquí puedes agregar más rutas hijas protegidas
+      ],
     },
   ]);
 
