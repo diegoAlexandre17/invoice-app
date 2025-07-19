@@ -40,7 +40,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="transition-transform duration-200 ease-in-out hover:translate-x-2">
+                  <SidebarMenuButton asChild className="transition-transform duration-200 ease-in-out hover:translate-x-1">
                     <Link to={item.url}>
                       <item.icon />
                       <span>{t(`navigation.${item.title}`)}</span>
