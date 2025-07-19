@@ -37,7 +37,7 @@ export function UserDropDown({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+
 
   return (
     <SidebarMenu>
@@ -46,7 +46,7 @@ export function UserDropDown({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground transition-all duration-200 ease-in-out"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
@@ -60,8 +60,8 @@ export function UserDropDown({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg bg-sidebar text-sidebar-foreground border-sidebar-border"
+            side={"bottom"}
             align="end"
             sideOffset={4}
           >
