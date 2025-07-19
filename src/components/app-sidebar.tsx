@@ -1,6 +1,7 @@
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,6 +12,7 @@ import {
 import { Settings, LayoutDashboard, Handshake, Receipt } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { UserDropDown } from "./UserDropDown";
 
 const items = [
   { title: "dashboard", url: "/admin", icon: LayoutDashboard },
@@ -18,6 +20,12 @@ const items = [
   { title: "invoices", url: "/admin/invoice", icon: Receipt },
   { title: "settings", url: "/admin/settings", icon: Settings },
 ];
+
+const user = {
+  name: "shadcn",
+  email: "m@example.com",
+  avatar: "/avatars/shadcn.jpg",
+}
 
 export function AppSidebar() {
 
@@ -44,6 +52,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <UserDropDown user={user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }
