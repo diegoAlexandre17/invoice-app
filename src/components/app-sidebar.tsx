@@ -21,12 +21,6 @@ const items = [
   { title: "settings", url: "/admin/settings", icon: Settings },
 ];
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
-}
-
 export function AppSidebar() {
 
   const {t} = useTranslation()
@@ -53,7 +47,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <UserDropDown user={user} />
+        <UserDropDown />
       </SidebarFooter>
     </Sidebar>
   );
