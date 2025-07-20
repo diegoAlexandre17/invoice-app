@@ -21,8 +21,8 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <Select value={currentLanguage} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="">
+    <Select value={currentLanguage} onValueChange={handleLanguageChange} >
+      <SelectTrigger className="w-full">
         <SelectValue>
           {languages.find((lang) => lang.code === currentLanguage)?.flag}
         </SelectValue>
