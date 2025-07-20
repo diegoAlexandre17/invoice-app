@@ -37,11 +37,8 @@ export function UserDropDown() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground transition-all duration-200 ease-in-out"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={user?.user_metadata.first_name}
-                  alt={user?.user_metadata.first_name}
-                />
-                <AvatarFallback className="rounded-lg">
+                
+                <AvatarFallback className="rounded-lg text-sidebar-accent-foreground">
                   {user?.user_metadata.first_name[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
