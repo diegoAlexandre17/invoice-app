@@ -7,24 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-// Tipos para las columnas
-export interface Column {
-  key: string;
-  label: string;
-  width?: string;
-  align?: "left" | "center" | "right";
-  render: (value: any, row: any) => React.ReactNode;
-}
-
-// Props del componente
-interface DataTableProps {
-  data: any[];
-  columns: Column[];
-  caption?: string;
-  title?: string;
-  description?: string;
-}
+import type { DataTableProps } from "./types";
 
 export default function DataTable({
   data,

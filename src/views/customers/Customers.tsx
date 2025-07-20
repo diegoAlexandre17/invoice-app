@@ -1,4 +1,5 @@
 import DataTable from "@/components/Table";
+import type { Column } from "@/components/Table/types";
 
 const Customers = () => {
   // Ejemplo de uso para usuarios (puedes mover esto a un archivo separado)
