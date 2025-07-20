@@ -39,21 +39,8 @@ export default function DataTable({
               {columns.map((column) => (
                 <TableHead
                   key={column.key}
-                  className={`${column.width ? column.width : ""} ${
-                    column.align === "center"
-                      ? "text-center"
-                      : column.align === "right"
-                      ? "text-right"
-                      : "text-left"
-                  }`}
-                  style={
-                    column.key === "id"
-                      ? {
-                          backgroundColor: "hsl(var(--primary))",
-                          color: "hsl(var(--secondary))",
-                        }
-                      : {}
-                  }
+                  className={`${column.width ? column.width : ""} text-${column.align || "left"}`}
+                  
                 >
                   {column.label}
                 </TableHead>
