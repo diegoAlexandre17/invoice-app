@@ -49,12 +49,6 @@ const Customers = () => {
   // Componente específico para usuarios usando el DataTable genérico
 
   const columns: Column[] = [
-    {
-      key: "id",
-      label: "ID",
-      width: "w-[100px]",
-      render: (value) => <div>{value}</div>,
-    },
     { key: "name", label: "Nombre", render: (value) => <div>{value}</div> },
     { key: "email", label: "Email", render: (value) => <div>{value}</div> },
     { key: "role", label: "Rol", render: (value) => <div>{value}</div> },

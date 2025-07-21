@@ -35,12 +35,15 @@ export default function DataTable({
             </TableCaption>
           )}
           <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
+            <TableRow className="bg-primary text-primary-foreground">
+              {columns.map((column, index) => (
                 <TableHead
                   key={column.key}
-                  className={`${column.width ? column.width : ""} text-${column.align || "left"}`}
-                  
+                  className={`${column.width ? column.width : ""} text-${column.align || "center"} text-primary-foreground ${
+                    index === 0 ? "rounded-tl-md" : ""
+                  } ${
+                    index === columns.length - 1 ? "rounded-tr-md" : ""
+                  }`}
                 >
                   {column.label}
                 </TableHead>
@@ -53,7 +56,7 @@ export default function DataTable({
                 {columns.map((column) => (
                   <TableCell
                     key={column.key}
-                    className={`text-${column.align || "left"}`}
+                    className={`text-${column.align || "center"}`}
                   >
                     {column.render(row[column.key], row)}
                   </TableCell>
