@@ -14,7 +14,8 @@
     "error": "Error",
     "success": "Éxito",
     "name": "Nombre",
-    "Ok":"Aceptar"
+    "Ok":"Aceptar",
+    "search": "Buscar"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",

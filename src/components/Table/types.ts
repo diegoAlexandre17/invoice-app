@@ -14,4 +14,6 @@ export interface DataTableProps {
   caption?: string;
   title?: string;
   description?: string;
+  actions?: React.ReactNode;
+  search?: boolean;
 }

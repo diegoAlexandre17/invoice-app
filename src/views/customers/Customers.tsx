@@ -2,8 +2,68 @@ import DataTable from "@/components/Table";
 import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
 import { Button } from "@/components/ui/button";
-import { SquarePen } from "lucide-react";
+import { Plus, SquarePen } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
+const TabActions = () => {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  return (
+    <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Agregar Cliente
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Agregar Nuevo Cliente</DialogTitle>
+          <DialogDescription>
+            Completa la información del nuevo cliente aquí.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Nombre
+            </Label>
+            <Input id="name" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="email" className="text-right">
+              Email
+            </Label>
+            <Input id="email" type="email" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="phone" className="text-right">
+              Teléfono
+            </Label>
+            <Input id="phone" className="col-span-3" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit" onClick={() => setIsAddDialogOpen(false)}>
+            Guardar Cliente
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const Customers = () => {
   const { t } = useTranslation();
@@ -84,8 +144,9 @@ const Customers = () => {
       data={users}
       columns={columns}
       title="Gestión de Usuarios"
-      description="Lista completa de usuarios registrados en el sistema"
+      // description="Lista completa de usuarios registrados en el sistema"
       caption="Lista de usuarios registrados en el sistema"
+      actions={<TabActions />}
     />
   );
 };

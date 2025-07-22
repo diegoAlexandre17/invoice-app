@@ -14,7 +14,8 @@
     "error": "Error",
     "success": "Success",
     "name": "Name",
-    "Ok":"Accept"
+    "Ok":"Accept",
+    "search": "Search"
   },
   "auth": {
     "loginTitle": "Welcome Back",
