@@ -1,7 +1,13 @@
 import DataTable from "@/components/Table";
+import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
+import { Button } from "@/components/ui/button";
+import { SquarePen } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Customers = () => {
+  const { t } = useTranslation();
+
   // Ejemplo de uso para usuarios (puedes mover esto a un archivo separado)
   const users = [
     {
@@ -63,7 +69,13 @@ const Customers = () => {
       label: "Acciones",
       align: "right",
       width: "w-[100px]",
-      render: (value, row) => <div>'actions'</div>,
+      render: (value, row) => (
+        <ActionTable
+          icon={<SquarePen />}
+          onClick={() => console.log("actions")}
+          tooltipText={t("common.edit")}
+        />
+      ),
     },
   ];
 
