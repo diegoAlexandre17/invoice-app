@@ -141,11 +141,10 @@ const Customers = () => {
 
   return (
     <DataTable
-      data={users}
+      data={[]}
       columns={columns}
       title="Gestión de Usuarios"
       // description="Lista completa de usuarios registrados en el sistema"
-      caption="Lista de usuarios registrados en el sistema"
       actions={<TabActions />}
     />
   );

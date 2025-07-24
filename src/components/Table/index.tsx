@@ -9,16 +9,15 @@ import {
 } from "@/components/ui/table";
 import type { DataTableProps } from "./types";
 import { Card, CardContent, CardHeader } from "../ui/card";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useTranslation } from "@/hooks/useTranslation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
+import NoData from "../general/NoData";
 
 export default function DataTable({
   data,
   columns,
-  caption,
   title,
   description,
   actions,
@@ -63,7 +62,9 @@ export default function DataTable({
           )}
           {actions && (
             <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto items-stretch md:items-center">
-              <div className="flex items-center gap-2 w-full md:w-auto">{actions}</div>
+              <div className="flex items-center gap-2 w-full md:w-auto">
+                {actions}
+              </div>
             </div>
           )}
         </div>
@@ -71,11 +72,6 @@ export default function DataTable({
 
       <CardContent>
         <Table>
-          {caption && (
-            <TableCaption>
-              {caption} {data.length > 0 && `Total: ${data.length} registros.`}
-            </TableCaption>
-          )}
           <TableHeader>
             <TableRow className="bg-primary text-primary-foreground">
               {columns.map((column, index) => (
@@ -92,20 +88,27 @@ export default function DataTable({
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {data.map((row, index) => (
-              <TableRow key={row.id || index}>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.key}
-                    className={`text-${column.align || "center"}`}
-                  >
-                    {column.render(row[column.key], row)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+
+          {data.length === 0 ? (
+            <TableCell colSpan={8}>
+              <NoData />
+            </TableCell>
+          ) : (
+            <TableBody>
+              {data.map((row, index) => (
+                <TableRow key={row.id || index}>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.key}
+                      className={`text-${column.align || "center"}`}
+                    >
+                      {column.render(row[column.key], row)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </CardContent>
     </Card>

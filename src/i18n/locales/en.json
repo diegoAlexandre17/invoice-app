@@ -15,7 +15,8 @@
     "success": "Success",
     "name": "Name",
     "Ok":"Accept",
-    "search": "Search"
+    "search": "Search",
+    "noData": "No data available"
   },
   "auth": {
     "loginTitle": "Welcome Back",

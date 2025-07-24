@@ -15,7 +15,8 @@
     "success": "Éxito",
     "name": "Nombre",
     "Ok":"Aceptar",
-    "search": "Buscar"
+    "search": "Buscar",
+    "noData": "Sin datos"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",

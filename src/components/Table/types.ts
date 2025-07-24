@@ -11,7 +11,6 @@ export interface Column {
 export interface DataTableProps {
   data: any[];
   columns: Column[];
-  caption?: string;
   title?: string;
   description?: string;
   actions?: React.ReactNode;
