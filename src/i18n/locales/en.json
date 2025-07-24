@@ -16,7 +16,8 @@
     "name": "Name",
     "Ok":"Accept",
     "search": "Search",
-    "noData": "No data available"
+    "noData": "No data available",
+    "maxLength15": "The field must be a maximum of 15 characters"
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -46,6 +47,14 @@
     "recoverPasswordSuccess":"Mail sent successfully",
     "resetPasswordSuccess":"Password changed successfully",
     "recover":"Recover"
+  },
+  "customers": {
+    "addCustomer":"Add new customer",
+    "addCustomerTxt":"Complete the information for the new customer here",
+    "editCustomer":"Edit customer",
+    "editCustomerTxt":"Complete the information for the customer here",
+    "phone": "Phone",
+    "address": "Address"
   },
   "navigation": {
     "dashboard": "Dashboard",

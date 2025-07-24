@@ -2,21 +2,22 @@
   "common": {
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión",
-    "email": "Correo Electrónico",
+    "email": "Email",
     "password": "Contraseña",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "save": "Guardar",
     "edit": "Editar",
     "delete": "Eliminar",
-    "goBack":"Atrás",
+    "goBack": "Atrás",
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
     "name": "Nombre",
-    "Ok":"Aceptar",
+    "Ok": "Aceptar",
     "search": "Buscar",
-    "noData": "Sin datos"
+    "noData": "Sin datos",
+    "maxLength15": "El campo debe tener un máximo de 15 caracteres"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
@@ -30,26 +31,34 @@
     "signIn": "Ingresar",
     "signUp": "Regístrate",
     "loginButton": "Iniciar Sesión",
-    "emailRequired":"Introduzca una dirección de correo electrónico válida",
-    "passwordRequired":"La contraseña es requerida",
-    "passwordRequired8":"La contraseña debe contener mínimo 8 caracteres",
-    "passwordRequiredPattern":"La contraseña debe tener números y letras",
-    "nameRequired":"El nombre es requerido",
-    "registerTitle":"Regístrate",
-    "registerSubtitle":"Crea una cuenta para continuar",
-    "namePlaceholder":"Ingresa tu nombre",
-    "confirmPasswordPlaceholder":"Confirma tu contraseña",
-    "registerButton":"Regístrate",
-    "registerSuccessTitle":"Registro exitoso",
-    "validateEmail":"Por favor valide su email y luego puede iniciar sesión en la plataforma",
-    "recoveryTitle":"Recuperar contraseña",
-    "recoverPasswordSuccess":"Correo enviado exitosamente",
-    "resetPasswordSuccess":"Se cambio la contraseña exitosamente",
-    "recover":"Recuperar"
+    "emailRequired": "Introduzca una dirección de correo electrónico válida",
+    "passwordRequired": "La contraseña es requerida",
+    "passwordRequired8": "La contraseña debe contener mínimo 8 caracteres",
+    "passwordRequiredPattern": "La contraseña debe tener números y letras",
+    "nameRequired": "El nombre es requerido",
+    "registerTitle": "Regístrate",
+    "registerSubtitle": "Crea una cuenta para continuar",
+    "namePlaceholder": "Ingresa tu nombre",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "registerButton": "Regístrate",
+    "registerSuccessTitle": "Registro exitoso",
+    "validateEmail": "Por favor valide su email y luego puede iniciar sesión en la plataforma",
+    "recoveryTitle": "Recuperar contraseña",
+    "recoverPasswordSuccess": "Correo enviado exitosamente",
+    "resetPasswordSuccess": "Se cambio la contraseña exitosamente",
+    "recover": "Recuperar"
+  },
+  "customers": {
+    "addCustomer":"Agregar nuevo cliente",
+    "addCustomerTxt":"Completa la información del nuevo cliente aquí",
+    "editCustomer":"Editar cliente",
+    "editCustomerTxt":"Completa la información del cliente aquí",
+    "phone": "Teléfono",
+    "address": "Dirección"
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "customers":"Clientes",
+    "customers": "Clientes",
     "invoices": "Facturas",
     "clients": "Clientes",
     "settings": "Configuración"
@@ -65,4 +74,4 @@
     "status": "Estado",
     "actions": "Acciones"
   }
-} 
+}
