@@ -43,7 +43,6 @@ const Register = () => {
   const onSubmit = async (formData: RegisterFormData) => {
     setIsLoading(true);
     try {
-      console.log("Form data:", formData);
 
       const { data: authData, error } = await supabase.auth.signUp({
         email: formData.email,
