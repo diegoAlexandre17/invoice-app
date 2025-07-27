@@ -60,10 +60,10 @@ const Customers = () => {
 
   const columns: Column[] = [
     { key: "name", label: "Nombre", render: (value) => <div>{value}</div> },
-    { key: "email", label: "Email", render: (value) => <div>{value || "N/A"}</div> },
-    { key: "phone", label: "Teléfono", render: (value) => <div>{value || "N/A"}</div> },
-    { key: "id_number", label: "ID", render: (value) => <div>{value || "N/A"}</div> },
-    { key: "address", label: "Dirección", render: (value) => <div>{value || "N/A"}</div> },
+    { key: "email", label: "Email", render: (value) => <div>{value || "-"}</div> },
+    { key: "phone", label: "Teléfono", render: (value) => <div>{value || "-"}</div> },
+    { key: "id_number", label: "ID", render: (value) => <div>{value || "-"}</div> },
+    { key: "address", label: "Dirección", render: (value) => <div>{value || "-"}</div> },
     {
       key: "created_at",
       label: "Fecha de Registro",
