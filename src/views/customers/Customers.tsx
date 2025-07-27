@@ -10,21 +10,34 @@ import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 
-const TabActions = () => {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-
+const TabActions = ({ 
+  isModalOpen, 
+  setIsModalOpen, 
+  editingCustomer, 
+  setEditingCustomer 
+}: {
+  isModalOpen: boolean;
+  setIsModalOpen: (open: boolean) => void;
+  editingCustomer: any;
+  setEditingCustomer: (customer: any) => void;
+}) => {
   const handleClose = () => {
-    setIsAddDialogOpen(false);
+    setIsModalOpen(false);
+    setEditingCustomer(null);
   };
 
   return (
     <>
-      <Button onClick={() => setIsAddDialogOpen(true)} size="lg">
+      <Button onClick={() => setIsModalOpen(true)} size="lg">
         <Plus className="mr-2 h-4 w-4" />
         Nuevo Cliente
       </Button>
 
-      <CustomersModal isOpen={isAddDialogOpen} onClose={handleClose} />
+      <CustomersModal 
+        isOpen={isModalOpen} 
+        onClose={handleClose}
+        editingCustomer={editingCustomer}
+      />
     </>
   );
 };
@@ -32,6 +45,8 @@ const TabActions = () => {
 const Customers = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCustomer, setEditingCustomer] = useState<any>(null);
 
   const {
     data: customers,
@@ -56,6 +71,11 @@ const Customers = () => {
     enabled: !!user, // Solo ejecutar si hay usuario
   });
 
+  const handleEditCustomer = (customer: any) => {
+    setEditingCustomer(customer);
+    setIsModalOpen(true);
+  };
+
   // Componente específico para clientes usando el DataTable genérico
 
   const columns: Column[] = [
@@ -77,7 +97,7 @@ const Customers = () => {
       render: (_, row) => (
         <ActionTable
           icon={<SquarePen />}
-          onClick={() => console.log("Edit customer:", row)}
+          onClick={() => handleEditCustomer(row)}
           tooltipText={t("common.edit")}
         />
       ),
@@ -90,7 +110,12 @@ const Customers = () => {
       columns={columns}
       title="Gestión de Clientes"
       description="Lista completa de clientes registrados"
-      actions={<TabActions />}
+      actions={<TabActions 
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        editingCustomer={editingCustomer}
+        setEditingCustomer={setEditingCustomer}
+      />}
       loading={loading}
     />
   );
