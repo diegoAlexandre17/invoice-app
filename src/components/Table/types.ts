@@ -16,4 +16,6 @@ export interface DataTableProps {
   actions?: React.ReactNode;
   search?: boolean;
   loading?: boolean;
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
 }

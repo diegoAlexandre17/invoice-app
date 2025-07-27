@@ -10,7 +10,6 @@ import type { DataTableProps } from "./types";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useState } from "react";
 import { Search } from "lucide-react";
 import NoData from "../general/NoData";
 import Loader from "../general/Loader";
@@ -23,16 +22,15 @@ export default function DataTable({
   actions,
   search = true,
   loading = false,
+  searchValue = "",
+  onSearchChange,
 }: DataTableProps) {
   const { t } = useTranslation();
-  const [searchValue, setSearchValue] = useState("");
-
-  // Si se quiere filtrar los datos aquí, se puede hacer:
-  // const filteredData = data.filter(...)
 
   const handleSearchChange = (value: string) => {
-    setSearchValue(value);
-    // Si se quiere notificar al padre, se puede agregar un prop onSearch
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
   };
 
   return (

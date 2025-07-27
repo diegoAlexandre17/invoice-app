@@ -9,6 +9,7 @@ import CustomersModal from "./CustomersModal";
 import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const TabActions = ({
   isModalOpen,
@@ -49,17 +50,29 @@ const Customers = () => {
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Aplicar debounce a la búsqueda (300ms de delay)
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const { data: customers, isLoading: loading } = useQuery({
-    queryKey: ["customers", user?.id],
+    queryKey: ["customers", user?.id, debouncedSearchQuery],
     queryFn: async () => {
       if (!user) return [];
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("customers")
         .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
+        .eq("user_id", user.id);
+
+      // Aplicar filtro de búsqueda si existe
+      if (debouncedSearchQuery.trim()) {
+        query = query.or(
+          `name.ilike.%${debouncedSearchQuery}%,email.ilike.%${debouncedSearchQuery}%,phone.ilike.%${debouncedSearchQuery}%,id_number.ilike.%${debouncedSearchQuery}%,address.ilike.%${debouncedSearchQuery}%`
+        );
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
 
       if (error) {
         throw new Error(error.message);
@@ -134,6 +147,8 @@ const Customers = () => {
         />
       }
       loading={loading}
+      searchValue={searchQuery}
+      onSearchChange={setSearchQuery}
     />
   );
 };
