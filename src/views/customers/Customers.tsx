@@ -3,28 +3,18 @@ import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
 import { Plus, SquarePen } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomersModal from "./CustomersModal";
 import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 
-interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  id_number: string;
-  address: string;
-  created_at: string;
-}
-
-const TabActions = ({ onCustomerAdded }: { onCustomerAdded: () => void }) => {
+const TabActions = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const handleClose = () => {
     setIsAddDialogOpen(false);
-    onCustomerAdded(); // Refrescar la lista cuando se cierre el modal
   };
 
   return (
@@ -42,13 +32,15 @@ const TabActions = ({ onCustomerAdded }: { onCustomerAdded: () => void }) => {
 const Customers = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const fetchCustomers = async () => {
-    if (!user) return;
+  const {
+    data: customers = [],
+    isLoading: loading
+  } = useQuery({
+    queryKey: ['customers', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
 
-    try {
       const { data, error } = await supabase
         .from("customers")
         .select("*")
@@ -56,21 +48,13 @@ const Customers = () => {
         .order("created_at", { ascending: false });
 
       if (error) {
-        console.error("Error fetching customers:", error);
-        return;
+        throw new Error(error.message);
       }
 
-      setCustomers(data || []);
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomers();
-  }, [user]);
+      return data || [];
+    },
+    enabled: !!user, // Solo ejecutar si hay usuario
+  });
 
   // Componente específico para clientes usando el DataTable genérico
 
@@ -110,7 +94,7 @@ const Customers = () => {
       columns={columns}
       title="Gestión de Clientes"
       description="Lista completa de clientes registrados"
-      actions={<TabActions onCustomerAdded={fetchCustomers} />}
+      actions={<TabActions />}
     />
   );
 };

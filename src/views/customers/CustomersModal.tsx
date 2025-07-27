@@ -13,10 +13,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { supabase } from "@/supabase/client";
-import { useState } from "react";
 import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/supabase/client";
 
 const customerSchema = z.object({
   name: z.string().min(1, "nameRequired").max(15, "maxLength60"),
@@ -36,8 +36,34 @@ interface CustomersModalProps {
 const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const createCustomerMutation = useMutation({
+    mutationFn: async (customerData: {
+      name: string;
+      email: string;
+      phone?: string;
+      id_number?: string;
+      address?: string;
+      user_id: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('customers')
+        .insert(customerData)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    },
+    onSuccess: (data) => {
+      // Invalidar y refrescar la lista de customers
+      queryClient.invalidateQueries({ queryKey: ['customers', data.user_id] });
+    },
+  });
 
   const {
     register,
@@ -62,43 +88,37 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
       return;
     }
 
-    setIsLoading(true);
-
     try {
-      const { error } = await supabase.from("customers").insert({
+      await createCustomerMutation.mutateAsync({
         name: formData.name,
-        email: formData.email ?? null,
-        phone: formData.phone ?? null,
-        id_number: formData.id ?? null,
-        address: formData.address ?? null,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        id_number: formData.id || undefined,
+        address: formData.address || undefined,
         user_id: user.id,
       });
 
-      if (error) {
-        console.log("Error inserting customer:", error);
-        if (error.code === "23505") {
-          return setError("email", { message: "emailHasBeenUsed" });
-        }
-
-        setError("root", { message: error.message });
+      SweetModal(
+        "success",
+        t("common.success"),
+        t("customers.createCustomerSuccess"),
+        t("common.Ok")
+      );
+      
+      reset();
+      onClose();
+    } catch (error: any) {
+      console.error("Error creating customer:", error);
+      
+      // Manejar errores específicos de Supabase
+      if (error.code === "23505") {
+        setError("email", { message: "emailHasBeenUsed" });
         return;
       }
 
-      if (!error) {
-        SweetModal(
-          "success",
-          t("common.success"),
-          t("customers.createCustomerSuccess"),
-          t("common.Ok")
-        );
-      }
-    } catch (error) {
-      console.error("Login error:", error);
       setError("root", {
-        message: "An unexpected error occurred. Please try again.",
+        message: error.message || "An unexpected error occurred. Please try again.",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -228,9 +248,9 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
           <Button
             type="submit"
             onClick={handleSubmit(onSubmit)}
-            disabled={isLoading}
+            disabled={createCustomerMutation.isPending}
           >
-            {isLoading ? t("common.loading") : t("common.save")}
+            {createCustomerMutation.isPending ? t("common.loading") : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
