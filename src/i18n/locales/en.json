@@ -76,5 +76,11 @@
     "amount": "Amount",
     "status": "Status",
     "actions": "Actions"
+  },
+  "errorsForm":{
+    "maxLength15": "The field must be a maximum of 15 characters",
+    "maxLength60": "The field must be a maximum of 60 characters",
+    "emailRequired": "Please enter a valid email address",
+    "nameRequired": "The name is required"
   }
 } 

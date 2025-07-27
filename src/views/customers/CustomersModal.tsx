@@ -19,14 +19,13 @@ import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
 
 const customerSchema = z.object({
-  name: z.string().min(1, "nameRequired"),
+  name: z.string().min(1, "nameRequired").max(15, "maxLength60"),
   email: z.email("emailRequired"),
   phone: z.string().max(15, "maxLength15").optional(),
   id: z.string().max(15, "maxLength15").optional(),
-  address: z.string().max(15, "maxLength15").optional(),
+  address: z.string().max(15, "maxLength60").optional(),
 });
 
-// Tipo TypeScript derivado del esquema
 type CustomerFormData = z.infer<typeof customerSchema>;
 
 interface CustomersModalProps {
@@ -64,7 +63,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
     }
 
     setIsLoading(true);
-    
+
     try {
       const { error } = await supabase.from("customers").insert({
         name: formData.name,
@@ -72,7 +71,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
         phone: formData.phone ?? null,
         id_number: formData.id ?? null,
         address: formData.address ?? null,
-        user_id: user.id, // Asociar el cliente con el usuario logueado
+        user_id: user.id,
       });
 
       if (error) {
@@ -93,9 +92,6 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
           t("common.Ok")
         );
       }
-
-      reset();
-      onClose();
     } catch (error) {
       console.error("Login error:", error);
       setError("root", {
@@ -104,14 +100,15 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
     } finally {
       setIsLoading(false);
     }
+  };
 
-    // Aquí puedes agregar la lógica para guardar el cliente
-    /* reset(); 
-    onClose();  */
+  const handleClose = () => {
+    reset();
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t(`customers.${"addCustomer"}`)}</DialogTitle>
@@ -134,7 +131,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               />
               {errors.name && (
                 <small className="text-red-500 mt-1">
-                  {t(`auth.${errors.name.message}`)}
+                  {t(`errorsForm.${errors.name.message}`)}
                 </small>
               )}
             </div>
@@ -154,7 +151,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               />
               {errors.email && (
                 <small className="text-red-500 mt-1">
-                  {t(`auth.${errors.email.message}`)}
+                  {t(`errorsForm.${errors.email.message}`)}
                 </small>
               )}
             </div>
@@ -173,7 +170,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               />
               {errors.phone && (
                 <small className="text-red-500 mt-1">
-                  {t(`common.${errors.phone.message}`)}
+                  {t(`errorsForm.${errors.phone.message}`)}
                 </small>
               )}
             </div>
@@ -192,7 +189,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               />
               {errors.id && (
                 <small className="text-red-500 mt-1">
-                  {t(`common.${errors.id.message}`)}
+                  {t(`errorsForm.${errors.id.message}`)}
                 </small>
               )}
             </div>
@@ -211,7 +208,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               />
               {errors.address && (
                 <small className="text-red-500 mt-1">
-                  {t(`common.${errors.address.message}`)}
+                  {t(`errorsForm.${errors.address.message}`)}
                 </small>
               )}
             </div>
@@ -228,7 +225,11 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
           <Button type="button" variant="outline" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button type="submit" onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+          <Button
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            disabled={isLoading}
+          >
             {isLoading ? t("common.loading") : t("common.save")}
           </Button>
         </DialogFooter>
