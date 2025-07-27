@@ -10,6 +10,7 @@
     "update": "Actualizar",
     "edit": "Editar",
     "delete": "Eliminar",
+    "warning": "Advertencia",
     "goBack": "Atrás",
     "loading": "Cargando...",
     "error": "Error",
@@ -58,7 +59,9 @@
     "phone": "Teléfono",
     "address": "Dirección",
     "createCustomerSuccess": "Cliente creado exitosamente",
-    "updateCustomerSuccess": "Cliente actualizado exitosamente"
+    "updateCustomerSuccess": "Cliente actualizado exitosamente",
+    "deleteCustomerConfirm": "¿Estás seguro de que deseas eliminar este cliente?",
+    "deleteCustomerSuccess": "Cliente eliminado exitosamente"
   },
   "navigation": {
     "dashboard": "Dashboard",
