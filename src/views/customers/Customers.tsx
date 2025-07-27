@@ -3,12 +3,29 @@ import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
 import { Plus, SquarePen } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import CustomersModal from "./CustomersModal";
+import { supabase } from "@/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
-const TabActions = () => {
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  id_number: string;
+  address: string;
+  created_at: string;
+}
+
+const TabActions = ({ onCustomerAdded }: { onCustomerAdded: () => void }) => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+
+  const handleClose = () => {
+    setIsAddDialogOpen(false);
+    onCustomerAdded(); // Refrescar la lista cuando se cierre el modal
+  };
 
   return (
     <>
@@ -17,67 +34,54 @@ const TabActions = () => {
         Nuevo Cliente
       </Button>
 
-      <CustomersModal isOpen={isAddDialogOpen} onClose={() => setIsAddDialogOpen(false)} />
+      <CustomersModal isOpen={isAddDialogOpen} onClose={handleClose} />
     </>
   );
 };
 
 const Customers = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Ejemplo de uso para usuarios (puedes mover esto a un archivo separado)
-  const users = [
-    {
-      id: "1",
-      name: "Ana García",
-      email: "ana.garcia@email.com",
-      role: "Admin",
-      status: "Activo",
-      joinDate: "2024-01-15",
-    },
-    {
-      id: "2",
-      name: "Carlos López",
-      email: "carlos.lopez@email.com",
-      role: "Editor",
-      status: "Activo",
-      joinDate: "2024-02-20",
-    },
-    {
-      id: "3",
-      name: "María Rodríguez",
-      email: "maria.rodriguez@email.com",
-      role: "Viewer",
-      status: "Inactivo",
-      joinDate: "2024-01-08",
-    },
-    {
-      id: "4",
-      name: "Juan Martínez",
-      email: "juan.martinez@email.com",
-      role: "Editor",
-      status: "Activo",
-      joinDate: "2024-03-10",
-    },
-    {
-      id: "5",
-      name: "Laura Sánchez",
-      email: "laura.sanchez@email.com",
-      role: "Admin",
-      status: "Activo",
-      joinDate: "2024-02-05",
-    },
-  ];
+  const fetchCustomers = async () => {
+    if (!user) return;
 
-  // Componente específico para usuarios usando el DataTable genérico
+    try {
+      const { data, error } = await supabase
+        .from("customers")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching customers:", error);
+        return;
+      }
+
+      setCustomers(data || []);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [user]);
+
+  // Componente específico para clientes usando el DataTable genérico
 
   const columns: Column[] = [
     { key: "name", label: "Nombre", render: (value) => <div>{value}</div> },
-    { key: "email", label: "Email", render: (value) => <div>{value}</div> },
-    { key: "role", label: "Rol", render: (value) => <div>{value}</div> },
-    { key: "status", label: "Estado", render: (value) => <div>{value}</div> },
+    { key: "email", label: "Email", render: (value) => <div>{value || "N/A"}</div> },
+    { key: "phone", label: "Teléfono", render: (value) => <div>{value || "N/A"}</div> },
+    { key: "id_number", label: "ID", render: (value) => <div>{value || "N/A"}</div> },
+    { key: "address", label: "Dirección", render: (value) => <div>{value || "N/A"}</div> },
     {
-      key: "joinDate",
+      key: "created_at",
       label: "Fecha de Registro",
       render: (value) => new Date(value).toLocaleDateString("es-ES"),
     },
@@ -86,23 +90,27 @@ const Customers = () => {
       label: "Acciones",
       align: "right",
       width: "w-[100px]",
-      render: (value, row) => (
+      render: (_, row) => (
         <ActionTable
           icon={<SquarePen />}
-          onClick={() => console.log("actions")}
+          onClick={() => console.log("Edit customer:", row)}
           tooltipText={t("common.edit")}
         />
       ),
     },
   ];
 
+  if (loading) {
+    return <div>Cargando clientes...</div>;
+  }
+
   return (
     <DataTable
-      data={users}
+      data={customers}
       columns={columns}
-      title="Gestión de Usuarios"
-      // description="Lista completa de usuarios registrados en el sistema"
-      actions={<TabActions />}
+      title="Gestión de Clientes"
+      description="Lista completa de clientes registrados"
+      actions={<TabActions onCustomerAdded={fetchCustomers} />}
     />
   );
 };

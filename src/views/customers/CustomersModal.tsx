@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/supabase/client";
 import { useState } from "react";
 import SweetModal from "@/components/modals/SweetAlert";
+import { useAuth } from "@/hooks/useAuth";
 
 const customerSchema = z.object({
   name: z.string().min(1, "nameRequired"),
@@ -35,6 +36,7 @@ interface CustomersModalProps {
 
 const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,6 +58,13 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   });
 
   const onSubmit = async (formData: CustomerFormData) => {
+    if (!user) {
+      setError("root", { message: "Usuario no autenticado" });
+      return;
+    }
+
+    setIsLoading(true);
+    
     try {
       const { error } = await supabase.from("customers").insert({
         name: formData.name,
@@ -63,6 +72,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
         phone: formData.phone ?? null,
         id_number: formData.id ?? null,
         address: formData.address ?? null,
+        user_id: user.id, // Asociar el cliente con el usuario logueado
       });
 
       if (error) {
@@ -218,8 +228,8 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
           <Button type="button" variant="outline" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button type="submit" onClick={handleSubmit(onSubmit)}>
-            {false ? t("common.loading") : t("common.save")}
+          <Button type="submit" onClick={handleSubmit(onSubmit)} disabled={isLoading}>
+            {isLoading ? t("common.loading") : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
