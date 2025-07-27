@@ -34,7 +34,7 @@ const Customers = () => {
   const { user } = useAuth();
 
   const {
-    data: customers = [],
+    data: customers,
     isLoading: loading
   } = useQuery({
     queryKey: ['customers', user?.id],
@@ -84,10 +84,6 @@ const Customers = () => {
     },
   ];
 
-  if (loading) {
-    return <div>Cargando clientes...</div>;
-  }
-
   return (
     <DataTable
       data={customers}
@@ -95,6 +91,7 @@ const Customers = () => {
       title="Gestión de Clientes"
       description="Lista completa de clientes registrados"
       actions={<TabActions />}
+      loading={loading}
     />
   );
 };

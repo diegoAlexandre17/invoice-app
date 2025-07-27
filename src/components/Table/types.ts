@@ -9,10 +9,11 @@ export interface Column {
 
 // Props del componente
 export interface DataTableProps {
-  data: any[];
+  data: any[] | undefined;
   columns: Column[];
   title?: string;
   description?: string;
   actions?: React.ReactNode;
   search?: boolean;
+  loading?: boolean;
 }

@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -14,6 +13,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useState } from "react";
 import { Search } from "lucide-react";
 import NoData from "../general/NoData";
+import Loader from "../general/Loader";
 
 export default function DataTable({
   data,
@@ -22,6 +22,7 @@ export default function DataTable({
   description,
   actions,
   search = true,
+  loading = false,
 }: DataTableProps) {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = useState("");
@@ -89,13 +90,25 @@ export default function DataTable({
             </TableRow>
           </TableHeader>
 
-          {data.length === 0 ? (
-            <TableCell colSpan={8}>
-              <NoData />
-            </TableCell>
+          {loading ? (
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={columns.length} className="py-8">
+                  <Loader text={t("common.loading")} />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : !loading && data?.length === 0 ? (
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={columns.length}>
+                  <NoData />
+                </TableCell>
+              </TableRow>
+            </TableBody>
           ) : (
             <TableBody>
-              {data.map((row, index) => (
+              {data?.map((row, index) => (
                 <TableRow key={row.id || index}>
                   {columns.map((column) => (
                     <TableCell
