@@ -10,17 +10,19 @@ import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 
-const TabActions = ({ 
-  isModalOpen, 
-  setIsModalOpen, 
-  editingCustomer, 
-  setEditingCustomer 
+const TabActions = ({
+  isModalOpen,
+  setIsModalOpen,
+  editingCustomer,
+  setEditingCustomer,
 }: {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
   editingCustomer: any;
   setEditingCustomer: (customer: any) => void;
 }) => {
+  const { t } = useTranslation();
+
   const handleClose = () => {
     setIsModalOpen(false);
     setEditingCustomer(null);
@@ -30,11 +32,11 @@ const TabActions = ({
     <>
       <Button onClick={() => setIsModalOpen(true)} size="lg">
         <Plus className="mr-2 h-4 w-4" />
-        Nuevo Cliente
+        {t("customers.addCustomer")}
       </Button>
 
-      <CustomersModal 
-        isOpen={isModalOpen} 
+      <CustomersModal
+        isOpen={isModalOpen}
         onClose={handleClose}
         editingCustomer={editingCustomer}
       />
@@ -48,11 +50,8 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
 
-  const {
-    data: customers,
-    isLoading: loading
-  } = useQuery({
-    queryKey: ['customers', user?.id],
+  const { data: customers, isLoading: loading } = useQuery({
+    queryKey: ["customers", user?.id],
     queryFn: async () => {
       if (!user) return [];
 
@@ -80,10 +79,26 @@ const Customers = () => {
 
   const columns: Column[] = [
     { key: "name", label: "Nombre", render: (value) => <div>{value}</div> },
-    { key: "email", label: "Email", render: (value) => <div>{value || "-"}</div> },
-    { key: "phone", label: "Teléfono", render: (value) => <div>{value || "-"}</div> },
-    { key: "id_number", label: "ID", render: (value) => <div>{value || "-"}</div> },
-    { key: "address", label: "Dirección", render: (value) => <div>{value || "-"}</div> },
+    {
+      key: "email",
+      label: "Email",
+      render: (value) => <div>{value || "-"}</div>,
+    },
+    {
+      key: "phone",
+      label: "Teléfono",
+      render: (value) => <div>{value || "-"}</div>,
+    },
+    {
+      key: "id_number",
+      label: "ID",
+      render: (value) => <div>{value || "-"}</div>,
+    },
+    {
+      key: "address",
+      label: "Dirección",
+      render: (value) => <div>{value || "-"}</div>,
+    },
     {
       key: "created_at",
       label: "Fecha de Registro",
@@ -110,12 +125,14 @@ const Customers = () => {
       columns={columns}
       title="Gestión de Clientes"
       description="Lista completa de clientes registrados"
-      actions={<TabActions 
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        editingCustomer={editingCustomer}
-        setEditingCustomer={setEditingCustomer}
-      />}
+      actions={
+        <TabActions
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          editingCustomer={editingCustomer}
+          setEditingCustomer={setEditingCustomer}
+        />
+      }
       loading={loading}
     />
   );
