@@ -56,6 +56,31 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
     onSuccess: (data) => {
       // Invalidar y refrescar la lista de customers
       queryClient.invalidateQueries({ queryKey: ['customers', data.user_id] });
+      
+      // Mostrar mensaje de éxito
+      SweetModal(
+        "success",
+        t("common.success"),
+        t("customers.createCustomerSuccess"),
+        t("common.Ok")
+      );
+      
+      // Limpiar formulario y cerrar modal
+      reset();
+      onClose();
+    },
+    onError: (error: any) => {
+      console.error("Error creating customer:", error);
+      
+      // Manejar errores específicos de Supabase
+      if (error.code === "23505") {
+        setError("email", { message: "emailHasBeenUsed" });
+        return;
+      }
+
+      setError("root", {
+        message: error.message || "An unexpected error occurred. Please try again.",
+      });
     },
   });
 
@@ -76,44 +101,20 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
     },
   });
 
-  const onSubmit = async (formData: CustomerFormData) => {
+  const onSubmit = (formData: CustomerFormData) => {
     if (!user) {
       setError("root", { message: "Usuario no autenticado" });
       return;
     }
 
-    try {
-      await createCustomerMutation.mutateAsync({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone || undefined,
-        id_number: formData.id || undefined,
-        address: formData.address || undefined,
-        user_id: user.id,
-      });
-
-      SweetModal(
-        "success",
-        t("common.success"),
-        t("customers.createCustomerSuccess"),
-        t("common.Ok")
-      );
-      
-      reset();
-      onClose();
-    } catch (error: any) {
-      console.error("Error creating customer:", error);
-      
-      // Manejar errores específicos de Supabase
-      if (error.code === "23505") {
-        setError("email", { message: "emailHasBeenUsed" });
-        return;
-      }
-
-      setError("root", {
-        message: error.message || "An unexpected error occurred. Please try again.",
-      });
-    }
+    createCustomerMutation.mutate({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      id_number: formData.id || undefined,
+      address: formData.address || undefined,
+      user_id: user.id,
+    });
   };
 
   const handleClose = () => {
