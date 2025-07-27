@@ -20,7 +20,7 @@ import { supabase } from "@/supabase/client";
 import type { Customers } from "./types";
 
 const customerSchema = z.object({
-  name: z.string().min(1, "nameRequired").max(15, "maxLength60"),
+  name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
   email: z.email("emailRequired"),
   phone: z.string().max(15, "maxLength15").optional(),
   id: z.string().max(15, "maxLength15").optional(),
