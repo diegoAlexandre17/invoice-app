@@ -17,6 +17,7 @@ import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase/client";
+import type { Customers } from "./types";
 
 const customerSchema = z.object({
   name: z.string().min(1, "nameRequired").max(15, "maxLength60"),
@@ -39,14 +40,7 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   const queryClient = useQueryClient();
 
   const createCustomerMutation = useMutation({
-    mutationFn: async (customerData: {
-      name: string;
-      email: string;
-      phone?: string;
-      id_number?: string;
-      address?: string;
-      user_id: string;
-    }) => {
+    mutationFn: async (customerData: Customers ) => {
       const { data, error } = await supabase
         .from('customers')
         .insert(customerData)
