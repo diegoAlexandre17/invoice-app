@@ -23,6 +23,7 @@
     "loginTitle": "Bienvenido de Vuelta",
     "loginSubtitle": "Inicia sesión en tu cuenta",
     "emailPlaceholder": "Ingresa tu correo electrónico",
+    "emailHasBeenUsed": "El correo electrónico ya ha sido utilizado",
     "passwordPlaceholder": "Ingresa tu contraseña",
     "passwordResetPlaceholder": "Ingresa tu nueva contraseña",
     "forgotPassword": "¿Olvidaste tu contraseña?",
@@ -54,7 +55,9 @@
     "editCustomer":"Editar cliente",
     "editCustomerTxt":"Completa la información del cliente aquí",
     "phone": "Teléfono",
-    "address": "Dirección"
+    "address": "Dirección",
+    "createCustomerSuccess": "Cliente creado exitosamente",
+    "updateCustomerSuccess": "Cliente actualizado exitosamente"
   },
   "navigation": {
     "dashboard": "Dashboard",

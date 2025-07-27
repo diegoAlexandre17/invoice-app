@@ -13,6 +13,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/supabase/client";
+import { useState } from "react";
+import SweetModal from "@/components/modals/SweetAlert";
 
 const customerSchema = z.object({
   name: z.string().min(1, "nameRequired"),
@@ -33,11 +36,14 @@ interface CustomersModalProps {
 const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   const { t } = useTranslation();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm<CustomerFormData>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -50,7 +56,45 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
   });
 
   const onSubmit = async (formData: CustomerFormData) => {
-    console.log("Form data:", formData);
+    try {
+      const { error } = await supabase.from("customers").insert({
+        name: formData.name,
+        email: formData.email ?? null,
+        phone: formData.phone ?? null,
+        id_number: formData.id ?? null,
+        address: formData.address ?? null,
+      });
+
+      if (error) {
+        console.log("Error inserting customer:", error);
+        if (error.code === "23505") {
+          return setError("email", { message: "emailHasBeenUsed" });
+        }
+
+        setError("root", { message: error.message });
+        return;
+      }
+
+      if (!error) {
+        SweetModal(
+          "success",
+          t("common.success"),
+          t("customers.createCustomerSuccess"),
+          t("common.Ok")
+        );
+      }
+
+      reset();
+      onClose();
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("root", {
+        message: "An unexpected error occurred. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+
     // Aquí puedes agregar la lógica para guardar el cliente
     /* reset(); 
     onClose();  */
@@ -162,6 +206,13 @@ const CustomersModal = ({ isOpen, onClose }: CustomersModalProps) => {
               )}
             </div>
           </div>
+
+          {/* Error general del formulario */}
+          {errors.root && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-3">
+              <p className="text-sm text-red-600">{errors.root.message}</p>
+            </div>
+          )}
         </div>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>

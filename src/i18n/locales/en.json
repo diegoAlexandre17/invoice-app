@@ -23,6 +23,7 @@
     "loginTitle": "Welcome Back",
     "loginSubtitle": "Sign in to your account",
     "emailPlaceholder": "Enter your email",
+    "emailHasBeenUsed": "The email has already been used",
     "passwordPlaceholder": "Enter your password",
     "passwordResetPlaceholder": "Enter your new password",
     "forgotPassword": "Forgot password?",
@@ -54,7 +55,9 @@
     "editCustomer":"Edit customer",
     "editCustomerTxt":"Complete the information for the customer here",
     "phone": "Phone",
-    "address": "Address"
+    "address": "Address",
+    "createCustomerSuccess": "Customer created successfully",
+    "updateCustomerSuccess": "Customer updated successfully"
   },
   "navigation": {
     "dashboard": "Dashboard",
