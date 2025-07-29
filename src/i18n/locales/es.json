@@ -68,7 +68,8 @@
     "customers": "Clientes",
     "invoices": "Facturas",
     "clients": "Clientes",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "company": "Empresa"
   },
   "invoice": {
     "title": "Factura",

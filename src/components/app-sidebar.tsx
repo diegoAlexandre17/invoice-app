@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Settings, LayoutDashboard, Handshake, Receipt } from "lucide-react";
+import { LayoutDashboard, Handshake, Receipt, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { UserDropDown } from "./UserDropDown";
@@ -18,13 +18,12 @@ const items = [
   { title: "dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "customers", url: "/admin/customers", icon: Handshake },
   { title: "invoices", url: "/admin/invoice", icon: Receipt },
-  { title: "settings", url: "/admin/settings", icon: Settings },
+  { title: "company", url: "/admin/company", icon: Building },
 ];
 
 export function AppSidebar() {
-
-  const {t} = useTranslation()
-  const location = useLocation()
+  const { t } = useTranslation();
+  const location = useLocation();
 
   return (
     <Sidebar>
@@ -34,16 +33,16 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = location.pathname === item.url
+                const isActive = location.pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild >
-                      <Link 
-                        to={item.url} 
+                    <SidebarMenuButton asChild>
+                      <Link
+                        to={item.url}
                         className={`transition-transform duration-200 py-4 h-12 ease-in-out hover:translate-x-1 ${
-                          isActive 
-                            ? 'bg-accent text-accent-foreground border-r-2 border-primary' 
-                            : ''
+                          isActive
+                            ? "bg-accent text-accent-foreground border-r-2 border-primary"
+                            : ""
                         }`}
                       >
                         <item.icon />
@@ -51,7 +50,7 @@ export function AppSidebar() {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                )
+                );
               })}
             </SidebarMenu>
           </SidebarGroupContent>

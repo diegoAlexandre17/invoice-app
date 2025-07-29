@@ -9,6 +9,7 @@ const Register = lazy(() => import("@/views/auth/Register"));
 const RecoveryPassword = lazy(() => import("@/views/auth/RecoveryPassword"));
 const RessetPassword = lazy(() => import("@/views/auth/ResetPassword"));
 const Customers = lazy(() => import("@/views/customers/Customers"));
+const Company = lazy(() => import("@/views/company/Company"));
 
 const Router = () => {
   let element = useRoutes([
@@ -43,6 +44,7 @@ const Router = () => {
         { path: "/admin", element: <h1>Dashboard</h1> },
         { path: "/admin/invoice", element: <h1>Invoice</h1> },
         { path: "/admin/customers", element: <Customers /> },
+        { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas
       ],
     },

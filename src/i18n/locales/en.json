@@ -68,7 +68,8 @@
     "customers":"Customers",
     "invoices": "Invoices",
     "clients": "Clients",
-    "settings": "Settings"
+    "settings": "Settings",
+    "company": "Company"
   },
   "invoice": {
     "title": "Invoice",
