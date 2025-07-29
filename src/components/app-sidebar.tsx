@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Settings, LayoutDashboard, Handshake, Receipt } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { UserDropDown } from "./UserDropDown";
 
 const items = [
@@ -24,24 +24,35 @@ const items = [
 export function AppSidebar() {
 
   const {t} = useTranslation()
+  const location = useLocation()
 
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menú</SidebarGroupLabel>
+          <SidebarGroupLabel className="mb-6">LOGO</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="transition-transform duration-200 ease-in-out hover:translate-x-1">
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{t(`navigation.${item.title}`)}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                const isActive = location.pathname === item.url
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild >
+                      <Link 
+                        to={item.url} 
+                        className={`transition-transform duration-200 py-4 h-12 ease-in-out hover:translate-x-1 ${
+                          isActive 
+                            ? 'bg-accent text-accent-foreground border-r-2 border-primary' 
+                            : ''
+                        }`}
+                      >
+                        <item.icon />
+                        <span>{t(`navigation.${item.title}`)}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
