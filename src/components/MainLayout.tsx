@@ -6,9 +6,11 @@ export default function MainLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main style={{ flex: 1 }}>
+      <main className="flex-1">
         <SidebarTrigger />
-        <Outlet />
+        <div className="content-container">
+          <Outlet />
+        </div>
       </main>
     </SidebarProvider>
   );

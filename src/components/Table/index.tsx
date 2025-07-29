@@ -34,7 +34,7 @@ export default function DataTable({
   };
 
   return (
-    <Card className="container mx-auto py-8">
+    <Card>
       <CardHeader>
         {(title || description) && (
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
