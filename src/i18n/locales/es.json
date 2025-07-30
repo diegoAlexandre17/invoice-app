@@ -87,11 +87,13 @@
     "companyInfoTxt": "Información registrada de la empresa",
     "name": "Nombre de la Empresa",
     "identification": "Identificación de la Empresa",
-    "logo": "Logo de la Empresa"
+    "logo": "Logo de la Empresa",
+    "formatSupported": "Formato soportado: PNG, JPG, JPEG"
   },
   "errorsForm":{
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
     "maxLength60": "El campo debe tener un máximo de 60 caracteres",
+    "maxLength120": "El campo debe tener un máximo de 120 caracteres",
     "emailRequired": "Introduzca una dirección de correo electrónico válida",
     "nameRequired": "El nombre es requerido"
   }

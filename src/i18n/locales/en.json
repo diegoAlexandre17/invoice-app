@@ -87,11 +87,13 @@
     "companyInfoTxt": "Registered company information",
     "name": "Company Name",
     "identification": "Company Identification",
-    "logo": "Company Logo"
+    "logo": "Company Logo",
+    "formatSupported": "Supported formats: PNG, JPG, JPEG"
   },
   "errorsForm":{
     "maxLength15": "The field must be a maximum of 15 characters",
     "maxLength60": "The field must be a maximum of 60 characters",
+    "maxLength120": "The field must be a maximum of 120 characters",
     "emailRequired": "Please enter a valid email address",
     "nameRequired": "The name is required"
   }

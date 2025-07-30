@@ -104,238 +104,245 @@ const Company = () => {
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 pb-6">
-        <div>
-          <CardTitle className="text-2xl">{t("company.companyInfo")}</CardTitle>
-          <CardDescription>{t("company.companyInfoTxt")}</CardDescription>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            size="lg"
-            onClick={handleEdit}
-            disabled={isEditing}
-            type="button"
-          >
-            <Edit className="h-4 w-4 mr-2" />
-            {t("common.edit")}
-          </Button>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium">
-              {t("company.name")}
-            </Label>
-            {isEditing ? (
-              <div>
-                <Input
-                  id="name"
-                  {...register("name")}
-                  placeholder="Ingresa el nombre de la empresa"
-                  className={errors.name ? "border-red-500" : ""}
-                />
-                {errors.name && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                {watchedValues.name}
-              </p>
-            )}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 pb-6">
+          <div>
+            <CardTitle className="text-2xl">
+              {t("company.companyInfo")}
+            </CardTitle>
+            <CardDescription>{t("company.companyInfoTxt")}</CardDescription>
           </div>
-
-          {/* id */}
-          <div className="space-y-2">
-            <Label htmlFor="identification" className="text-sm font-medium">
-              {t("company.identification")}
-            </Label>
-            {isEditing ? (
-              <div>
-                <Input
-                  id="identification"
-                  {...register("identification")}
-                  placeholder="Ej: 900.123.456-7"
-                  className={errors.identification ? "border-red-500" : ""}
-                />
-                {errors.identification && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.identification.message}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                {watchedValues.identification}
-              </p>
-            )}
+          <div className="flex gap-2">
+            <Button
+              size="lg"
+              onClick={handleEdit}
+              disabled={isEditing}
+              type="button"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              {t("common.edit")}
+            </Button>
           </div>
+        </CardHeader>
 
-          {/* address */}
-          <div className="space-y-2">
-            <Label htmlFor="address" className="text-sm font-medium">
-              {`${t("customers.address")}`}
-            </Label>
-            {isEditing ? (
-              <div>
-                <Input
-                  id="address"
-                  {...register("address")}
-                  placeholder="Ingresa la dirección completa"
-                  className={errors.address ? "border-red-500" : ""}
-                />
-                {errors.address && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.address.message}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                {watchedValues.address}
-              </p>
-            )}
-          </div>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                {t("company.name")}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    id="name"
+                    {...register("name")}
+                    placeholder="Ingresa el nombre de la empresa"
+                    className={errors.name ? "border-red-500" : ""}
+                  />
+                  {errors.name && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.name.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {watchedValues.name}
+                </p>
+              )}
+            </div>
 
-          {/* phone */}
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-sm font-medium">
-              {`${t("customers.phone")}`}
-            </Label>
-            {isEditing ? (
-              <div>
-                <Input
-                  id="phone"
-                  {...register("phone")}
-                  placeholder="Ej: +57 1 234 5678"
-                  className={errors.phone ? "border-red-500" : ""}
-                />
-                {errors.phone && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.phone.message}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                {watchedValues.phone}
-              </p>
-            )}
-          </div>
+            {/* id */}
+            <div className="space-y-2">
+              <Label htmlFor="identification" className="text-sm font-medium">
+                {t("company.identification")}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    id="identification"
+                    {...register("identification")}
+                    placeholder="Ej: 900.123.456-7"
+                    className={errors.identification ? "border-red-500" : ""}
+                  />
 
-          {/* email */}
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="email" className="text-sm font-medium">
-              {`${t("common.email")}`}
-            </Label>
-            {isEditing ? (
-              <div>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register("email")}
-                  placeholder="contacto@empresa.com"
-                  className={errors.email ? "border-red-500" : ""}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                {watchedValues.email}
-              </p>
-            )}
-          </div>
+                  {errors.identification && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.identification.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {watchedValues.identification}
+                </p>
+              )}
+            </div>
 
-          {/* Logo */}
-          <div className="space-y-2 md:col-span-2 pt-4 border-t">
-            <Label htmlFor="logo" className="text-sm font-medium">
-              {t("company.logo")}
-            </Label>
-            {isEditing ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-4">
-                  {(logoPreview || watchedValues.logo) && (
-                    <div className="relative">
-                      <img
-                        src={
-                          logoPreview ||
-                          watchedValues.logo ||
-                          "/placeholder.svg"
-                        }
-                        alt="Logo preview"
-                        className="w-16 h-16 object-contain border rounded-md bg-white"
+            {/* address */}
+            <div className="space-y-2">
+              <Label htmlFor="address" className="text-sm font-medium">
+                {`${t("customers.address")}`}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    id="address"
+                    {...register("address")}
+                    placeholder="Ingresa la dirección completa"
+                    className={errors.address ? "border-red-500" : ""}
+                  />
+                  {errors.address && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.address.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {watchedValues.address}
+                </p>
+              )}
+            </div>
+
+            {/* phone */}
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-sm font-medium">
+                {`${t("customers.phone")}`}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    id="phone"
+                    {...register("phone")}
+                    placeholder="Ej: +57 1 234 5678"
+                    className={errors.phone ? "border-red-500" : ""}
+                  />
+                  {errors.phone && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.phone.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {watchedValues.phone}
+                </p>
+              )}
+            </div>
+
+            {/* email */}
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                {`${t("common.email")}`}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register("email")}
+                    placeholder="contacto@empresa.com"
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                  {errors.email && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.email.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {watchedValues.email}
+                </p>
+              )}
+            </div>
+
+            {/* Logo */}
+            <div className="space-y-2 md:col-span-2 pt-4 border-t">
+              <Label htmlFor="logo" className="text-sm font-medium">
+                {t("company.logo")}
+              </Label>
+              {isEditing ? (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4">
+                    {(logoPreview || watchedValues.logo) && (
+                      <div className="relative">
+                        <img
+                          src={
+                            logoPreview ||
+                            watchedValues.logo ||
+                            "/placeholder.svg"
+                          }
+                          alt="Logo preview"
+                          className="w-16 h-16 object-contain border rounded-md bg-white"
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <Input
+                        id="logo"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="cursor-pointer"
                       />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t("company.formatSupported")}
+                      </p>
+                    </div>
+                  </div>
+                  {errors.logo && (
+                    <small className="text-red-500 mt-1">
+                      {t(`errorsForm.${errors.logo.message}`)}
+                    </small>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-muted p-3 rounded-md">
+                  {watchedValues.logo ? (
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={watchedValues.logo || "/placeholder.svg"}
+                        alt="Logo de la empresa"
+                        className="w-12 h-12 object-contain border rounded bg-white"
+                      />
+                      <span className="text-sm text-muted-foreground">
+                        Logo cargado
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-3 text-muted-foreground">
+                      <Building2 className="w-12 h-12 p-2 border rounded bg-white" />
+                      <span className="text-sm">Sin logo</span>
                     </div>
                   )}
-                  <div className="flex-1">
-                    <Input
-                      id="logo"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="cursor-pointer"
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Formatos soportados: JPG, PNG, GIF. Máximo 5MB.
-                    </p>
-                  </div>
                 </div>
-                {errors.logo && (
-                  <p className="text-sm text-red-500">{errors.logo.message}</p>
-                )}
-              </div>
-            ) : (
-              <div className="bg-muted p-3 rounded-md">
-                {watchedValues.logo ? (
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={watchedValues.logo || "/placeholder.svg"}
-                      alt="Logo de la empresa"
-                      className="w-12 h-12 object-contain border rounded bg-white"
-                    />
-                    <span className="text-sm text-muted-foreground">
-                      Logo cargado
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 text-muted-foreground">
-                    <Building2 className="w-12 h-12 p-2 border rounded bg-white" />
-                    <span className="text-sm">Sin logo</span>
-                  </div>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </CardContent>
+        </CardContent>
 
-      {isEditing && (
-        <div className="flex gap-2 justify-end me-4">
-          <Button type="submit" size="lg">
-            <Save className="h-4 w-4 mr-2" />
-            {t("common.save")}
-          </Button>
-          <Button
-            onClick={handleCancel}
-            variant="outline"
-            size="lg"
-            type="button"
-          >
-            <X className="h-4 w-4 mr-2" />
-            {t("common.cancel")}
-          </Button>
-        </div>
-      )}
-    </Card>
+        {isEditing && (
+          <div className="flex gap-2 justify-end me-4">
+            <Button
+              onClick={handleCancel}
+              variant="outline"
+              size="lg"
+              type="button"
+            >
+              <X className="h-4 w-4 mr-2" />
+              {t("common.cancel")}
+            </Button>
+            <Button type="submit" size="lg">
+              <Save className="h-4 w-4 mr-2" />
+              {t("common.save")}
+            </Button>
+          </div>
+        )}
+      </Card>
+    </form>
   );
 };
 
