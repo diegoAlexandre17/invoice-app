@@ -103,45 +103,23 @@ const Company = () => {
     setLogoPreview("");
   };
 
-
   return (
-    
-      <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 pb-6">
         <div>
           <CardTitle className="text-2xl">{t("company.companyInfo")}</CardTitle>
-          <CardDescription>
-            {t("company.companyInfoTxt")}
-          </CardDescription>
+          <CardDescription>{t("company.companyInfoTxt")}</CardDescription>
         </div>
         <div className="flex gap-2">
-          {!isEditing ? (
-            <Button
-              onClick={handleEdit}
-              variant="outline"
-              size="sm"
-              type="button"
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              {t("common.edit")}
-            </Button>
-          ) : (
-            <>
-              <Button type="submit" size="sm">
-                <Save className="h-4 w-4 mr-2" />
-                {t("common.save")}
-              </Button>
-              <Button
-                onClick={handleCancel}
-                variant="outline"
-                size="sm"
-                type="button"
-              >
-                <X className="h-4 w-4 mr-2" />
-                {t("common.cancel")}
-              </Button>
-            </>
-          )}
+          <Button
+            size="lg"
+            onClick={handleEdit}
+            disabled={isEditing}
+            type="button"
+          >
+            <Edit className="h-4 w-4 mr-2" />
+            {t("common.edit")}
+          </Button>
         </div>
       </CardHeader>
 
@@ -172,7 +150,7 @@ const Company = () => {
             )}
           </div>
 
-          {/* Número de identificación - Segunda columna */}
+          {/* id */}
           <div className="space-y-2">
             <Label htmlFor="identification" className="text-sm font-medium">
               {t("company.identification")}
@@ -198,7 +176,7 @@ const Company = () => {
             )}
           </div>
 
-          {/* Dirección - Primera columna, segunda fila */}
+          {/* address */}
           <div className="space-y-2">
             <Label htmlFor="address" className="text-sm font-medium">
               {`${t("customers.address")}`}
@@ -224,7 +202,7 @@ const Company = () => {
             )}
           </div>
 
-          {/* Teléfono - Segunda columna, segunda fila */}
+          {/* phone */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-sm font-medium">
               {`${t("customers.phone")}`}
@@ -250,7 +228,7 @@ const Company = () => {
             )}
           </div>
 
-          {/* Correo electrónico - Ocupa toda la fila en ambas vistas */}
+          {/* email */}
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="email" className="text-sm font-medium">
               {`${t("common.email")}`}
@@ -277,7 +255,7 @@ const Company = () => {
             )}
           </div>
 
-          {/* Logo de la empresa - Al final ocupando todo el ancho */}
+          {/* Logo */}
           <div className="space-y-2 md:col-span-2 pt-4 border-t">
             <Label htmlFor="logo" className="text-sm font-medium">
               {t("company.logo")}
@@ -288,7 +266,11 @@ const Company = () => {
                   {(logoPreview || watchedValues.logo) && (
                     <div className="relative">
                       <img
-                        src={logoPreview || watchedValues.logo || "/placeholder.svg"}
+                        src={
+                          logoPreview ||
+                          watchedValues.logo ||
+                          "/placeholder.svg"
+                        }
                         alt="Logo preview"
                         className="w-16 h-16 object-contain border rounded-md bg-white"
                       />
@@ -320,7 +302,9 @@ const Company = () => {
                       alt="Logo de la empresa"
                       className="w-12 h-12 object-contain border rounded bg-white"
                     />
-                    <span className="text-sm text-muted-foreground">Logo cargado</span>
+                    <span className="text-sm text-muted-foreground">
+                      Logo cargado
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3 text-muted-foreground">
@@ -333,8 +317,25 @@ const Company = () => {
           </div>
         </div>
       </CardContent>
+
+      {isEditing && (
+        <div className="flex gap-2 justify-end me-4">
+          <Button type="submit" size="lg">
+            <Save className="h-4 w-4 mr-2" />
+            {t("common.save")}
+          </Button>
+          <Button
+            onClick={handleCancel}
+            variant="outline"
+            size="lg"
+            type="button"
+          >
+            <X className="h-4 w-4 mr-2" />
+            {t("common.cancel")}
+          </Button>
+        </div>
+      )}
     </Card>
-    
   );
 };
 
