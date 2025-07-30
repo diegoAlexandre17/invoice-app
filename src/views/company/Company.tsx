@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Edit, Save, X, Building2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,94 +15,214 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import Loader from "@/components/general/Loader";
+import SweetModal from "@/components/modals/SweetAlert";
+
+// Tipos para los datos de la empresa
+interface CompanyData {
+  id?: string;
+  user_id?: string;
+  name: string;
+  address: string;
+  identification: string;
+  phone: string;
+  email: string;
+  logo?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+type CompanyFormData = Omit<
+  CompanyData,
+  "id" | "user_id" | "created_at" | "updated_at"
+>;
 
 // Zod schema for company validation
 const companySchema = z.object({
   name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
-  address: z.string().max(15, "maxLength60"),
+  address: z.string().max(120, "maxLength120"),
   identification: z.string().max(15, "maxLength60"),
   phone: z.string().max(15, "maxLength15"),
   email: z.email("emailRequired"),
   logo: z.string().optional(),
 });
 
-type CompanyFormData = z.infer<typeof companySchema>;
-
 const Company = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string>("");
 
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  // Mock data - replace with real data from your API/database
-  const mockCompanyData: CompanyFormData = {
-    name: "Mi Empresa S.A.S",
-    address: "Calle 123 #45-67, Bogotá, Colombia",
-    identification: "900.123.456-7",
-    phone: "+57 1 234 5678",
-    email: "contacto@miempresa.com",
-    logo: "", // URL del logo o base64
-  };
+  // Query para obtener los datos de la empresa
+  const {
+    data: companyData,
+    isPending: loading,
+    isSuccess,
+  } = useQuery<CompanyData | null>({
+    queryKey: ["company", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+
+      const { data, error } = await supabase
+        .from("company")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle(); // Usar maybeSingle() en lugar de single()
+
+      if (error) {
+        console.error("Error fetching company data:", error);
+        throw error;
+      }
+
+      return data as CompanyData | null;
+    },
+    enabled: !!user,
+     // Solo ejecutar la query cuando hay un usuario
+  });
+
+  // Mutation para crear/actualizar empresa
+  const updateCompanyMutation = useMutation({
+    mutationFn: async (companyFormData: CompanyFormData) => {
+      if (!user) throw new Error("Usuario no autenticado");
+
+      const companyWithUserId = {
+        ...companyFormData,
+        user_id: user.id,
+      };
+
+      // Actualizar empresa existente
+      const { data, error } = await supabase
+        .from("company")
+        .update(companyWithUserId)
+        .eq("user_id", user.id)
+        .select()
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidar y refetch la query de company
+      queryClient.invalidateQueries({ queryKey: ["company", user?.id] });
+      SweetModal(
+        "success",
+        t("common.success"),
+        t("company.updateCompanySuccess"),
+        t("common.Ok")
+      );
+    },
+    onError: (error) => {
+      console.error("Error saving company data:", error);
+    },
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
-    setValue,
   } = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
-    defaultValues: mockCompanyData,
+    defaultValues: {
+      name: '',
+      address: '',
+      identification: '',
+      phone: '',
+      email: '',
+      logo: '',
+    },
   });
 
-  const watchedValues = watch();
-
-  // Función para manejar el cambio de archivo
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Validar tamaño del archivo (5MB máximo)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("El archivo debe ser menor a 5MB");
-        return;
-      }
-
-      // Validar tipo de archivo
-      if (!file.type.startsWith("image/")) {
-        alert("Solo se permiten archivos de imagen");
-        return;
-      }
-
-      // Crear URL de preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setLogoPreview(result);
-        setValue("logo", result); // Actualizar el valor en react-hook-form
-      };
-      reader.readAsDataURL(file);
+  // Efecto para ejecutar código cuando la consulta es exitosa
+  useEffect(() => {
+    if (isSuccess && companyData) {
+      
+      reset({
+        name: companyData.name || '',
+        address: companyData.address || '',
+        identification: companyData.identification || '',
+        phone: companyData.phone || '',
+        email: companyData.email || '',
+        logo: companyData.logo || '',
+      });
     }
-  };
+  }, [isSuccess, companyData, reset]);
+
+  console.log("Company data:", companyData);
+
+  // Función para manejar el cambio de archivo (comentada porque no se usa actualmente)
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     // Validar tamaño del archivo (5MB máximo)
+  //     if (file.size > 5 * 1024 * 1024) {
+  //       alert("El archivo debe ser menor a 5MB");
+  //       return;
+  //     }
+
+  //     // Validar tipo de archivo
+  //     if (!file.type.startsWith("image/")) {
+  //       alert("Solo se permiten archivos de imagen");
+  //       return;
+  //     }
+
+  //     // Crear URL de preview
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const result = e.target?.result as string;
+  //       setLogoPreview(result);
+  //       setValue("logo", result); // Actualizar el valor en react-hook-form
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const handleEdit = () => {
     setIsEditing(true);
-    setLogoPreview(mockCompanyData.logo || "");
-    reset(mockCompanyData);
+    setLogoPreview("");
+    reset();
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setLogoPreview("");
-    reset(mockCompanyData);
+    reset();
   };
 
   const onSubmit = (data: CompanyFormData) => {
     console.log("Datos del formulario:", data);
-    // Here you would typically save the data to your API/database
-    setIsEditing(false);
-    setLogoPreview("");
+
+    const dataToSend = {
+      name: data.name,
+      address: data.address,
+      identification: data.identification,
+      phone: data.phone,
+      email: data.email,
+    };
+
+    // Guardar los datos usando la mutation
+    updateCompanyMutation.mutate(dataToSend, {
+      onSuccess: () => {
+        setIsEditing(false);
+        setLogoPreview("");
+        console.log("Empresa guardada exitosamente");
+      },
+      onError: (error: any) => {
+        console.error("Error al guardar la empresa:", error);
+        // Aquí podrías mostrar un toast o mensaje de error
+      },
+    });
   };
+
+  // Mostrar loader mientras se cargan los datos
+  if (loading && !companyData) {
+    return <Loader />;
+  }
+
+  // return (<h1>hola</h1>)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -117,11 +238,11 @@ const Company = () => {
             <Button
               size="lg"
               onClick={handleEdit}
-              disabled={isEditing}
+              disabled={isEditing || loading}
               type="button"
             >
               <Edit className="h-4 w-4 mr-2" />
-              {t("common.edit")}
+              {loading ? t("common.loading") : t("common.edit")}
             </Button>
           </div>
         </CardHeader>
@@ -137,7 +258,6 @@ const Company = () => {
                   <Input
                     id="name"
                     {...register("name")}
-                    placeholder="Ingresa el nombre de la empresa"
                     className={errors.name ? "border-red-500" : ""}
                   />
                   {errors.name && (
@@ -148,7 +268,7 @@ const Company = () => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  {watchedValues.name}
+                  {companyData?.name}
                 </p>
               )}
             </div>
@@ -163,7 +283,6 @@ const Company = () => {
                   <Input
                     id="identification"
                     {...register("identification")}
-                    placeholder="Ej: 900.123.456-7"
                     className={errors.identification ? "border-red-500" : ""}
                   />
 
@@ -175,7 +294,7 @@ const Company = () => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  {watchedValues.identification}
+                  {companyData?.identification}
                 </p>
               )}
             </div>
@@ -190,7 +309,6 @@ const Company = () => {
                   <Input
                     id="address"
                     {...register("address")}
-                    placeholder="Ingresa la dirección completa"
                     className={errors.address ? "border-red-500" : ""}
                   />
                   {errors.address && (
@@ -201,7 +319,7 @@ const Company = () => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  {watchedValues.address}
+                  {companyData?.address}
                 </p>
               )}
             </div>
@@ -216,7 +334,6 @@ const Company = () => {
                   <Input
                     id="phone"
                     {...register("phone")}
-                    placeholder="Ej: +57 1 234 5678"
                     className={errors.phone ? "border-red-500" : ""}
                   />
                   {errors.phone && (
@@ -227,7 +344,7 @@ const Company = () => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  {watchedValues.phone}
+                  {companyData?.phone}
                 </p>
               )}
             </div>
@@ -243,7 +360,6 @@ const Company = () => {
                     id="email"
                     type="email"
                     {...register("email")}
-                    placeholder="contacto@empresa.com"
                     className={errors.email ? "border-red-500" : ""}
                   />
                   {errors.email && (
@@ -254,25 +370,25 @@ const Company = () => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
-                  {watchedValues.email}
+                  {companyData?.email}
                 </p>
               )}
             </div>
 
             {/* Logo */}
-            <div className="space-y-2 md:col-span-2 pt-4 border-t">
+            {/* <div className="space-y-2 md:col-span-2 pt-4 border-t">
               <Label htmlFor="logo" className="text-sm font-medium">
                 {t("company.logo")}
               </Label>
               {isEditing ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-4">
-                    {(logoPreview || watchedValues.logo) && (
+                    {(logoPreview || companyData?.logo) && (
                       <div className="relative">
                         <img
                           src={
                             logoPreview ||
-                            watchedValues.logo ||
+                            companyData?.logo ||
                             "/placeholder.svg"
                           }
                           alt="Logo preview"
@@ -301,10 +417,10 @@ const Company = () => {
                 </div>
               ) : (
                 <div className="bg-muted p-3 rounded-md">
-                  {watchedValues.logo ? (
+                  {companyData?.logo ? (
                     <div className="flex items-center gap-3">
                       <img
-                        src={watchedValues.logo || "/placeholder.svg"}
+                        src={companyData?.logo || "/placeholder.svg"}
                         alt="Logo de la empresa"
                         className="w-12 h-12 object-contain border rounded bg-white"
                       />
@@ -320,7 +436,7 @@ const Company = () => {
                   )}
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </CardContent>
 
@@ -331,13 +447,14 @@ const Company = () => {
               variant="outline"
               size="lg"
               type="button"
+              disabled={updateCompanyMutation.isPending}
             >
               <X className="h-4 w-4 mr-2" />
               {t("common.cancel")}
             </Button>
-            <Button type="submit" size="lg">
+            <Button type="submit" size="lg" disabled={updateCompanyMutation.isPending}>
               <Save className="h-4 w-4 mr-2" />
-              {t("common.save")}
+              {updateCompanyMutation.isPending ? t("common.loading") : t("common.save")}
             </Button>
           </div>
         )}

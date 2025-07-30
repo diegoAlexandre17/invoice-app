@@ -88,7 +88,8 @@
     "name": "Nombre de la Empresa",
     "identification": "Identificación de la Empresa",
     "logo": "Logo de la Empresa",
-    "formatSupported": "Formato soportado: PNG, JPG, JPEG"
+    "formatSupported": "Formato soportado: PNG, JPG, JPEG",
+    "updateCompanySuccess": "Información de la empresa actualizada exitosamente"
   },
   "errorsForm":{
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
