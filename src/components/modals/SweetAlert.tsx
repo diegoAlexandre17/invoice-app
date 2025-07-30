@@ -23,8 +23,8 @@ const SweetModal = (
 
   const defaultCustomClass = {
     container: "px-5",
-    confirmButton: "px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-md transition-colors duration-200",
-    cancelButton: "px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-md transition-colors duration-200 mx-3",
+    confirmButton: "px-4 cursor-pointer py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-md transition-colors duration-200",
+    cancelButton: "px-4 cursor-pointer py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-md transition-colors duration-200 mx-3",
   };
 
   return Swal.fire({
