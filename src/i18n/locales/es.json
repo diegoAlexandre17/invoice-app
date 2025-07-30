@@ -82,6 +82,13 @@
     "status": "Estado",
     "actions": "Acciones"
   },
+  "company": {
+    "companyInfo": "Información de la Empresa",
+    "companyInfoTxt": "Información registrada de la empresa",
+    "name": "Nombre de la Empresa",
+    "identification": "Identificación de la Empresa",
+    "logo": "Logo de la Empresa"
+  },
   "errorsForm":{
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
     "maxLength60": "El campo debe tener un máximo de 60 caracteres",

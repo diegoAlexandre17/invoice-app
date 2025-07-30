@@ -13,17 +13,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 // Zod schema for company validation
 const companySchema = z.object({
-  name: z.string().min(1, "El nombre de la empresa es requerido"),
-  address: z.string().min(1, "La dirección es requerida"),
-  identification: z.string().min(1, "El número de identificación es requerido"),
-  phone: z.string().min(1, "El teléfono es requerido"),
-  email: z
-    .string()
-    .email("Debe ser un email válido")
-    .min(1, "El email es requerido"),
+  name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
+  address: z.string().max(15, "maxLength60"),
+  identification: z.string().max(15, "maxLength60"),
+  phone: z.string().max(15, "maxLength15"),
+  email: z.email("emailRequired"),
   logo: z.string().optional(),
 });
 
@@ -32,6 +30,8 @@ type CompanyFormData = z.infer<typeof companySchema>;
 const Company = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string>("");
+
+  const { t } = useTranslation();
 
   // Mock data - replace with real data from your API/database
   const mockCompanyData: CompanyFormData = {
@@ -103,20 +103,15 @@ const Company = () => {
     setLogoPreview("");
   };
 
-  
-
-  console.log(isEditing);
 
   return (
     
       <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 pb-6">
         <div>
-          <CardTitle className="text-2xl">Información de la Empresa</CardTitle>
+          <CardTitle className="text-2xl">{t("company.companyInfo")}</CardTitle>
           <CardDescription>
-            {isEditing
-              ? "Edita la información de tu empresa"
-              : "Datos registrados de la empresa"}
+            {t("company.companyInfoTxt")}
           </CardDescription>
         </div>
         <div className="flex gap-2">
@@ -128,13 +123,13 @@ const Company = () => {
               type="button"
             >
               <Edit className="h-4 w-4 mr-2" />
-              Editar
+              {t("common.edit")}
             </Button>
           ) : (
             <>
               <Button type="submit" size="sm">
                 <Save className="h-4 w-4 mr-2" />
-                Guardar
+                {t("common.save")}
               </Button>
               <Button
                 onClick={handleCancel}
@@ -143,7 +138,7 @@ const Company = () => {
                 type="button"
               >
                 <X className="h-4 w-4 mr-2" />
-                Cancelar
+                {t("common.cancel")}
               </Button>
             </>
           )}
@@ -152,10 +147,9 @@ const Company = () => {
 
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-          {/* Nombre de la empresa - Columna completa en móvil, primera columna en desktop */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium">
-              Nombre de la Empresa
+              {t("company.name")}
             </Label>
             {isEditing ? (
               <div>
@@ -181,7 +175,7 @@ const Company = () => {
           {/* Número de identificación - Segunda columna */}
           <div className="space-y-2">
             <Label htmlFor="identification" className="text-sm font-medium">
-              Número de Identificación
+              {t("company.identification")}
             </Label>
             {isEditing ? (
               <div>
@@ -207,7 +201,7 @@ const Company = () => {
           {/* Dirección - Primera columna, segunda fila */}
           <div className="space-y-2">
             <Label htmlFor="address" className="text-sm font-medium">
-              Dirección
+              {`${t("customers.address")}`}
             </Label>
             {isEditing ? (
               <div>
@@ -233,7 +227,7 @@ const Company = () => {
           {/* Teléfono - Segunda columna, segunda fila */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-sm font-medium">
-              Teléfono
+              {`${t("customers.phone")}`}
             </Label>
             {isEditing ? (
               <div>
@@ -259,7 +253,7 @@ const Company = () => {
           {/* Correo electrónico - Ocupa toda la fila en ambas vistas */}
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="email" className="text-sm font-medium">
-              Correo Electrónico
+              {`${t("common.email")}`}
             </Label>
             {isEditing ? (
               <div>
@@ -286,7 +280,7 @@ const Company = () => {
           {/* Logo de la empresa - Al final ocupando todo el ancho */}
           <div className="space-y-2 md:col-span-2 pt-4 border-t">
             <Label htmlFor="logo" className="text-sm font-medium">
-              Logo de la Empresa
+              {t("company.logo")}
             </Label>
             {isEditing ? (
               <div className="space-y-3">
