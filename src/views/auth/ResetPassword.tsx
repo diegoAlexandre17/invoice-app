@@ -122,7 +122,7 @@ const RessetPassword = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <TextErrorSmall error={errors.password.message} />
+                    <TextErrorSmall error={t(`auth.${errors.password.message}`)} />
                   )}
                 </div>
               </div>

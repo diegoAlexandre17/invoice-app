@@ -119,7 +119,7 @@ const Register = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <TextErrorSmall error={errors.name.message} />
+                    <TextErrorSmall error= {t(`auth.${errors.name.message}`)} />
                   )}
                 </div>
 
@@ -141,7 +141,7 @@ const Register = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <TextErrorSmall error={errors.email.message} />
+                    <TextErrorSmall error={t(`auth.${errors.email.message}`)} />
                   )}
                 </div>
 
@@ -165,7 +165,7 @@ const Register = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <TextErrorSmall error={errors.password.message} />
+                    <TextErrorSmall error={t(`auth.${errors.password.message}`)} />
                   )}
                 </div>
               </div>

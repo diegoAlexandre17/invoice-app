@@ -109,7 +109,7 @@ const Login = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <TextErrorSmall error={errors.email.message} />
+                    <TextErrorSmall error={t(`auth.${errors.email.message}`)} />
                   )}
                 </div>
 
@@ -133,8 +133,7 @@ const Login = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    
-                     <TextErrorSmall error={errors.password.message} />
+                    <TextErrorSmall error={t(`auth.${errors.password.message}`)} />
                   )}
                 </div>
               </div>

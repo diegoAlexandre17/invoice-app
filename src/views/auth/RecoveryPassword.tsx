@@ -107,7 +107,7 @@ const RecoveryPassword = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <TextErrorSmall error={errors.email.message} />
+                    <TextErrorSmall error={t(`auth.${errors.email.message}`)} />
                     
                   )}
                 </div>

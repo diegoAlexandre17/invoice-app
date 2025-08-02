@@ -4,7 +4,7 @@ const TextErrorSmall = ({ error } : { error: string | undefined }) => {
   const { t } = useTranslation();
   return (
     <small className="text-red-500 mt-1">
-      {t(`auth.${error}`)}
+      {error}
     </small>
   );
 };
