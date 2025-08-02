@@ -90,7 +90,8 @@
     "logo": "Logo de la Empresa",
     "formatSupported": "Formato soportado: PNG, JPG, JPEG",
     "updateCompanySuccess": "Información de la empresa actualizada exitosamente",
-    "saveCompanyError": "Error al guardar la información de la empresa"
+    "saveCompanyError": "Error al guardar la información de la empresa",
+    "companyLogoError": "Error al cargar el logo de la empresa"
   },
   "errorsForm":{
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",

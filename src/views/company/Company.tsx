@@ -230,31 +230,6 @@ const Company = () => {
     }
   };
 
-  // Función para eliminar logo anterior del Storage
-  const deleteOldLogo = async (logoUrl: string) => {
-    try {
-      console.log("Intentando eliminar logo anterior:", logoUrl);
-
-      // Extraer el path del archivo de la URL
-      const urlParts = logoUrl.split("/");
-      const fileName = urlParts[urlParts.length - 1];
-
-      console.log("Eliminando archivo:", fileName);
-
-      const { error } = await supabase.storage
-        .from("company-logos")
-        .remove([fileName]); // Sin subcarpeta
-
-      if (error) {
-        console.error("Error deleting old logo:", error);
-      } else {
-        console.log("Logo anterior eliminado correctamente");
-      }
-    } catch (error) {
-      console.error("Error en deleteOldLogo:", error);
-    }
-  };
-
   // Función para manejar el cambio de archivo
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -320,16 +295,11 @@ const Company = () => {
 
         if (uploadedLogoUrl) {
           logoUrl = uploadedLogoUrl;
-
-          // Si había un logo anterior, eliminarlo (opcional)
-          if (companyData?.logo && companyData.logo !== logoUrl) {
-            await deleteOldLogo(companyData.logo);
-          }
         } else {
           SweetModal(
             "error",
             t("common.error"),
-            "Error al subir el logo",
+            t('company.companyLogoError'),
             t("common.Ok")
           );
           return;
@@ -358,7 +328,7 @@ const Company = () => {
           SweetModal(
             "error",
             t("common.error"),
-            "Error al guardar la empresa",
+            t("company.saveCompanyError"),
             t("common.Ok")
           );
         },
@@ -366,12 +336,6 @@ const Company = () => {
     } catch (error) {
       console.error("Error en onSubmit:", error);
       setIsUploadingLogo(false);
-      SweetModal(
-        "error",
-        t("common.error"),
-        "Error al procesar los datos",
-        t("common.Ok")
-      );
     }
   };
 
