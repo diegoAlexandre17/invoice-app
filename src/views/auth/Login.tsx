@@ -9,6 +9,7 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
@@ -72,7 +73,9 @@ const Login = () => {
           {/* Optional overlay or content for the image */}
           <div className="w-full h-full bg-opacity-20 flex items-center justify-center">
             <div className="text-center text-white">
-              <h1 className="text-6xl font-bold mb-4">{t('auth.loginTitle')}</h1>
+              <h1 className="text-6xl font-bold mb-4">
+                {t("auth.loginTitle")}
+              </h1>
             </div>
           </div>
         </div>
@@ -106,9 +109,7 @@ const Login = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.email.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.email.message} />
                   )}
                 </div>
 
@@ -132,9 +133,8 @@ const Login = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.password.message}`)}
-                    </small>
+                    
+                     <TextErrorSmall error={errors.password.message} />
                   )}
                 </div>
               </div>

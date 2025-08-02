@@ -11,9 +11,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 const recoverySchema = z.object({
-  password: z.string().min(8, "passwordRequired8").regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
+  password: z
+    .string()
+    .min(8, "passwordRequired8")
+    .regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
 });
 
 // Tipo TypeScript derivado del esquema
@@ -118,9 +122,7 @@ const RessetPassword = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.password.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.password.message} />
                   )}
                 </div>
               </div>

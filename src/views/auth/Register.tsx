@@ -10,12 +10,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 // Esquema de validación con Zod
 const registerSchema = z.object({
   name: z.string().min(1, "nameRequired"),
   email: z.email("emailRequired"),
-  password: z.string().min(8, "passwordRequired8").regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
+  password: z
+    .string()
+    .min(8, "passwordRequired8")
+    .regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, "passwordRequiredPattern"),
 });
 
 // Tipo TypeScript derivado del esquema
@@ -43,7 +47,6 @@ const Register = () => {
   const onSubmit = async (formData: RegisterFormData) => {
     setIsLoading(true);
     try {
-
       const { data: authData, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -116,9 +119,7 @@ const Register = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.name.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.name.message} />
                   )}
                 </div>
 
@@ -140,9 +141,7 @@ const Register = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.email.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.email.message} />
                   )}
                 </div>
 
@@ -166,9 +165,7 @@ const Register = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.password.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.password.message} />
                   )}
                 </div>
               </div>

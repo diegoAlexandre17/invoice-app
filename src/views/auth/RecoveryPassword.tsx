@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 // Esquema de validación con Zod
 const recoverySchema = z.object({
@@ -106,9 +107,8 @@ const RecoveryPassword = () => {
                     {...register("email")}
                   />
                   {errors.email && (
-                    <small className="text-red-500 mt-1">
-                      {t(`auth.${errors.email.message}`)}
-                    </small>
+                    <TextErrorSmall error={errors.email.message} />
+                    
                   )}
                 </div>
               </div>
