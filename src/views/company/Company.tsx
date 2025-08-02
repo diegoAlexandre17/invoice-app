@@ -19,6 +19,7 @@ import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Loader from "@/components/general/Loader";
 import SweetModal from "@/components/modals/SweetAlert";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 // Tipos para los datos de la empresa
 interface CompanyData {
@@ -81,7 +82,7 @@ const Company = () => {
       return data as CompanyData | null;
     },
     enabled: !!user,
-     // Solo ejecutar la query cuando hay un usuario
+    // Solo ejecutar la query cuando hay un usuario
   });
 
   // Mutation para crear/actualizar empresa
@@ -99,7 +100,7 @@ const Company = () => {
         .from("company")
         .update(companyWithUserId)
         .eq("user_id", user.id)
-        .select()
+        .select();
 
       if (error) throw error;
       return data;
@@ -127,26 +128,25 @@ const Company = () => {
   } = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
-      name: '',
-      address: '',
-      identification: '',
-      phone: '',
-      email: '',
-      logo: '',
+      name: "",
+      address: "",
+      identification: "",
+      phone: "",
+      email: "",
+      logo: "",
     },
   });
 
   // Efecto para ejecutar código cuando la consulta es exitosa
   useEffect(() => {
     if (isSuccess && companyData) {
-      
       reset({
-        name: companyData.name || '',
-        address: companyData.address || '',
-        identification: companyData.identification || '',
-        phone: companyData.phone || '',
-        email: companyData.email || '',
-        logo: companyData.logo || '',
+        name: companyData.name || "",
+        address: companyData.address || "",
+        identification: companyData.identification || "",
+        phone: companyData.phone || "",
+        email: companyData.email || "",
+        logo: companyData.logo || "",
       });
     }
   }, [isSuccess, companyData, reset]);
@@ -261,9 +261,7 @@ const Company = () => {
                     className={errors.name ? "border-red-500" : ""}
                   />
                   {errors.name && (
-                    <small className="text-red-500 mt-1">
-                      {t(`errorsForm.${errors.name.message}`)}
-                    </small>
+                    <TextErrorSmall error={t(`errorsForm.${errors.name.message}`)} />
                   )}
                 </div>
               ) : (
@@ -287,9 +285,9 @@ const Company = () => {
                   />
 
                   {errors.identification && (
-                    <small className="text-red-500 mt-1">
-                      {t(`errorsForm.${errors.identification.message}`)}
-                    </small>
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.identification.message}`)}
+                    />
                   )}
                 </div>
               ) : (
@@ -312,9 +310,10 @@ const Company = () => {
                     className={errors.address ? "border-red-500" : ""}
                   />
                   {errors.address && (
-                    <small className="text-red-500 mt-1">
-                      {t(`errorsForm.${errors.address.message}`)}
-                    </small>
+                    
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.address.message}`)}
+                    />
                   )}
                 </div>
               ) : (
@@ -337,9 +336,9 @@ const Company = () => {
                     className={errors.phone ? "border-red-500" : ""}
                   />
                   {errors.phone && (
-                    <small className="text-red-500 mt-1">
-                      {t(`errorsForm.${errors.phone.message}`)}
-                    </small>
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.phone.message}`)}
+                    />
                   )}
                 </div>
               ) : (
@@ -363,9 +362,9 @@ const Company = () => {
                     className={errors.email ? "border-red-500" : ""}
                   />
                   {errors.email && (
-                    <small className="text-red-500 mt-1">
-                      {t(`errorsForm.${errors.email.message}`)}
-                    </small>
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.email.message}`)}
+                    />
                   )}
                 </div>
               ) : (
@@ -452,9 +451,15 @@ const Company = () => {
               <X className="h-4 w-4 mr-2" />
               {t("common.cancel")}
             </Button>
-            <Button type="submit" size="lg" disabled={updateCompanyMutation.isPending}>
+            <Button
+              type="submit"
+              size="lg"
+              disabled={updateCompanyMutation.isPending}
+            >
               <Save className="h-4 w-4 mr-2" />
-              {updateCompanyMutation.isPending ? t("common.loading") : t("common.save")}
+              {updateCompanyMutation.isPending
+                ? t("common.loading")
+                : t("common.save")}
             </Button>
           </div>
         )}

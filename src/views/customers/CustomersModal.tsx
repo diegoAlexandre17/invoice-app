@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/supabase/client";
 import type { Customers } from "./types";
+import TextErrorSmall from "@/components/general/TextErrorSmall";
 
 const customerSchema = z.object({
   name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
@@ -36,16 +37,20 @@ interface CustomersModalProps {
   editingCustomer?: any;
 }
 
-const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProps) => {
+const CustomersModal = ({
+  isOpen,
+  onClose,
+  editingCustomer,
+}: CustomersModalProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const isEditing = !!editingCustomer;
 
   const createCustomerMutation = useMutation({
-    mutationFn: async (customerData: Customers ) => {
+    mutationFn: async (customerData: Customers) => {
       const { data, error } = await supabase
-        .from('customers')
+        .from("customers")
         .insert(customerData)
         .select()
         .single();
@@ -58,8 +63,8 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
     },
     onSuccess: (data) => {
       // Invalidar y refrescar la lista de customers
-      queryClient.invalidateQueries({ queryKey: ['customers', data.user_id] });
-      
+      queryClient.invalidateQueries({ queryKey: ["customers", data.user_id] });
+
       // Mostrar mensaje de éxito
       SweetModal(
         "success",
@@ -67,14 +72,14 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
         t("customers.createCustomerSuccess"),
         t("common.Ok")
       );
-      
+
       // Limpiar formulario y cerrar modal
       reset();
       onClose();
     },
     onError: (error: any) => {
       console.error("Error creating customer:", error);
-      
+
       // Manejar errores específicos de Supabase
       if (error.code === "23505") {
         setError("email", { message: "emailHasBeenUsed" });
@@ -82,17 +87,24 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
       }
 
       setError("root", {
-        message: error.message || "An unexpected error occurred. Please try again.",
+        message:
+          error.message || "An unexpected error occurred. Please try again.",
       });
     },
   });
 
   const updateCustomerMutation = useMutation({
-    mutationFn: async ({ id, customerData }: { id: string; customerData: Omit<Customers, 'user_id'> }) => {
+    mutationFn: async ({
+      id,
+      customerData,
+    }: {
+      id: string;
+      customerData: Omit<Customers, "user_id">;
+    }) => {
       const { data, error } = await supabase
-        .from('customers')
+        .from("customers")
         .update(customerData)
-        .eq('id', id)
+        .eq("id", id)
         .select()
         .single();
 
@@ -104,8 +116,8 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
     },
     onSuccess: (data) => {
       // Invalidar y refrescar la lista de customers
-      queryClient.invalidateQueries({ queryKey: ['customers', data.user_id] });
-      
+      queryClient.invalidateQueries({ queryKey: ["customers", data.user_id] });
+
       // Mostrar mensaje de éxito
       SweetModal(
         "success",
@@ -113,14 +125,14 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
         t("customers.updateCustomerSuccess"),
         t("common.Ok")
       );
-      
+
       // Limpiar formulario y cerrar modal
       reset();
       onClose();
     },
     onError: (error: any) => {
       console.error("Error updating customer:", error);
-      
+
       // Manejar errores específicos de Supabase
       if (error.code === "23505") {
         setError("email", { message: "emailHasBeenUsed" });
@@ -128,7 +140,8 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
       }
 
       setError("root", {
-        message: error.message || "An unexpected error occurred. Please try again.",
+        message:
+          error.message || "An unexpected error occurred. Please try again.",
       });
     },
   });
@@ -141,36 +154,42 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
     setError,
   } = useForm<CustomerFormData>({
     resolver: zodResolver(customerSchema),
-    defaultValues: isEditing ? {
-      name: editingCustomer?.name,
-      email: editingCustomer?.email,
-      phone: editingCustomer?.phone || "",
-      id: editingCustomer?.id_number || "",
-      address: editingCustomer?.address || "",
-    } : {
-      name: "",
-      email: "",
-      phone: "",
-      id: "",
-      address: "",
-    },
+    defaultValues: isEditing
+      ? {
+          name: editingCustomer?.name,
+          email: editingCustomer?.email,
+          phone: editingCustomer?.phone || "",
+          id: editingCustomer?.id_number || "",
+          address: editingCustomer?.address || "",
+        }
+      : {
+          name: "",
+          email: "",
+          phone: "",
+          id: "",
+          address: "",
+        },
   });
 
   // Efecto para resetear el formulario cuando cambia el estado de edición
   useEffect(() => {
-    reset(isEditing ? {
-      name: editingCustomer?.name || "",
-      email: editingCustomer?.email || "",
-      phone: editingCustomer?.phone || "",
-      id: editingCustomer?.id_number || "",
-      address: editingCustomer?.address || "",
-    } : {
-      name: "",
-      email: "",
-      phone: "",
-      id: "",
-      address: "",
-    });
+    reset(
+      isEditing
+        ? {
+            name: editingCustomer?.name || "",
+            email: editingCustomer?.email || "",
+            phone: editingCustomer?.phone || "",
+            id: editingCustomer?.id_number || "",
+            address: editingCustomer?.address || "",
+          }
+        : {
+            name: "",
+            email: "",
+            phone: "",
+            id: "",
+            address: "",
+          }
+    );
   }, [editingCustomer, isEditing, reset]);
 
   const onSubmit = (formData: CustomerFormData) => {
@@ -189,7 +208,7 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
           phone: formData.phone || undefined,
           id_number: formData.id || undefined,
           address: formData.address || undefined,
-        }
+        },
       });
     } else {
       // Crear nuevo cliente
@@ -214,10 +233,14 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? t(`customers.${"editCustomer"}`) : t(`customers.${"addCustomer"}`)}
+            {isEditing
+              ? t(`customers.${"editCustomer"}`)
+              : t(`customers.${"addCustomer"}`)}
           </DialogTitle>
           <DialogDescription>
-            {isEditing ? t(`customers.${"editCustomerTxt"}`) : t(`customers.${"addCustomerTxt"}`)}
+            {isEditing
+              ? t(`customers.${"editCustomerTxt"}`)
+              : t(`customers.${"addCustomerTxt"}`)}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -234,9 +257,9 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
                 }
               />
               {errors.name && (
-                <small className="text-red-500 mt-1">
-                  {t(`errorsForm.${errors.name.message}`)}
-                </small>
+                <TextErrorSmall
+                  error={t(`errorsForm.${errors.name.message}`)}
+                />
               )}
             </div>
           </div>
@@ -254,9 +277,9 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
                 }
               />
               {errors.email && (
-                <small className="text-red-500 mt-1">
-                  {t(`errorsForm.${errors.email.message}`)}
-                </small>
+                <TextErrorSmall
+                  error={t(`errorsForm.${errors.email.message}`)}
+                />
               )}
             </div>
           </div>
@@ -273,9 +296,9 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
                 }
               />
               {errors.phone && (
-                <small className="text-red-500 mt-1">
-                  {t(`errorsForm.${errors.phone.message}`)}
-                </small>
+                <TextErrorSmall
+                  error={t(`errorsForm.${errors.phone.message}`)}
+                />
               )}
             </div>
           </div>
@@ -292,9 +315,7 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
                 }
               />
               {errors.id && (
-                <small className="text-red-500 mt-1">
-                  {t(`errorsForm.${errors.id.message}`)}
-                </small>
+                <TextErrorSmall error={t(`errorsForm.${errors.id.message}`)} />
               )}
             </div>
           </div>
@@ -311,9 +332,9 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
                 }
               />
               {errors.address && (
-                <small className="text-red-500 mt-1">
-                  {t(`errorsForm.${errors.address.message}`)}
-                </small>
+                <TextErrorSmall
+                  error={t(`errorsForm.${errors.address.message}`)}
+                />
               )}
             </div>
           </div>
@@ -332,14 +353,17 @@ const CustomersModal = ({ isOpen, onClose, editingCustomer }: CustomersModalProp
           <Button
             type="submit"
             onClick={handleSubmit(onSubmit)}
-            disabled={createCustomerMutation.isPending || updateCustomerMutation.isPending}
-          >
-            {(createCustomerMutation.isPending || updateCustomerMutation.isPending) 
-              ? t("common.loading") 
-              : isEditing 
-                ? t("common.update") 
-                : t("common.save")
+            disabled={
+              createCustomerMutation.isPending ||
+              updateCustomerMutation.isPending
             }
+          >
+            {createCustomerMutation.isPending ||
+            updateCustomerMutation.isPending
+              ? t("common.loading")
+              : isEditing
+              ? t("common.update")
+              : t("common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
