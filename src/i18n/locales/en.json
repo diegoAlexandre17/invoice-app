@@ -96,6 +96,9 @@
     "maxLength60": "The field must be a maximum of 60 characters",
     "maxLength120": "The field must be a maximum of 120 characters",
     "emailRequired": "Please enter a valid email address",
-    "nameRequired": "The name is required"
+    "nameRequired": "The name is required",
+    "addressRequired": "The address is required",
+    "identificationRequired": "The identification is required",
+    "phoneRequired": "The phone is required"
   }
 } 

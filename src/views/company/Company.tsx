@@ -43,10 +43,10 @@ type CompanyFormData = Omit<
 // Zod schema for company validation
 const companySchema = z.object({
   name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
-  address: z.string().max(120, "maxLength120"),
-  identification: z.string().max(15, "maxLength60"),
-  phone: z.string().max(15, "maxLength15"),
   email: z.email("emailRequired"),
+  address: z.string().min(1, "addressRequired").max(120, "maxLength120"),
+  identification: z.string().min(1, "identificationRequired").max(15, "maxLength60"),
+  phone: z.string().min(1, "phoneRequired").max(15, "maxLength15"),
   logo: z.string().optional(),
 });
 

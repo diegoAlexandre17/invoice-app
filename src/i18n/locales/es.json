@@ -96,6 +96,9 @@
     "maxLength60": "El campo debe tener un máximo de 60 caracteres",
     "maxLength120": "El campo debe tener un máximo de 120 caracteres",
     "emailRequired": "Introduzca una dirección de correo electrónico válida",
-    "nameRequired": "El nombre es requerido"
+    "nameRequired": "El nombre es requerido",
+    "addressRequired": "La dirección es requerida",
+    "identificationRequired": "La identificación es requerida",
+    "phoneRequired": "El teléfono es requerido"
   }
 }
