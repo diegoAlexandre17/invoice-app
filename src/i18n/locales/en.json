@@ -89,7 +89,8 @@
     "identification": "Company Identification",
     "logo": "Company Logo",
     "formatSupported": "Supported formats: PNG, JPG, JPEG",
-    "updateCompanySuccess": "Company information updated successfully"
+    "updateCompanySuccess": "Company information updated successfully",
+    "saveCompanyError": "Error saving company information"
   },
   "errorsForm":{
     "maxLength15": "The field must be a maximum of 15 characters",

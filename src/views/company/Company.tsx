@@ -45,7 +45,10 @@ const companySchema = z.object({
   name: z.string().min(1, "nameRequired").max(60, "maxLength60"),
   email: z.email("emailRequired"),
   address: z.string().min(1, "addressRequired").max(120, "maxLength120"),
-  identification: z.string().min(1, "identificationRequired").max(15, "maxLength60"),
+  identification: z
+    .string()
+    .min(1, "identificationRequired")
+    .max(15, "maxLength60"),
   phone: z.string().min(1, "phoneRequired").max(15, "maxLength15"),
   logo: z.string().optional(),
 });
@@ -53,6 +56,8 @@ const companySchema = z.object({
 const Company = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -85,7 +90,6 @@ const Company = () => {
     // Solo ejecutar la query cuando hay un usuario
   });
 
-  // Mutation para crear/actualizar empresa
   const updateCompanyMutation = useMutation({
     mutationFn: async (companyFormData: CompanyFormData) => {
       if (!user) throw new Error("Usuario no autenticado");
@@ -95,15 +99,33 @@ const Company = () => {
         user_id: user.id,
       };
 
-      // Actualizar empresa existente
-      const { data, error } = await supabase
+      // Verificar si la empresa existe
+      const { data: existingCompany } = await supabase
         .from("company")
-        .update(companyWithUserId)
+        .select("id")
         .eq("user_id", user.id)
-        .select();
+        .maybeSingle();
 
-      if (error) throw error;
-      return data;
+      if (existingCompany) {
+        // Actualizar empresa existente
+        const { data, error } = await supabase
+          .from("company")
+          .update(companyWithUserId)
+          .eq("user_id", user.id)
+          .select();
+
+        if (error) throw error;
+        return data;
+      } else {
+        // Crear nueva empresa
+        const { data, error } = await supabase
+          .from("company")
+          .insert(companyWithUserId)
+          .select();
+
+        if (error) throw error;
+        return data;
+      }
     },
     onSuccess: () => {
       // Invalidar y refetch la query de company
@@ -117,6 +139,12 @@ const Company = () => {
     },
     onError: (error) => {
       console.error("Error saving company data:", error);
+      SweetModal(
+        "error",
+        t("common.error"),
+        t('company.saveCompanyError'),
+        t("common.Ok")
+      );
     },
   });
 
@@ -137,7 +165,6 @@ const Company = () => {
     },
   });
 
-  // Efecto para ejecutar código cuando la consulta es exitosa
   useEffect(() => {
     if (isSuccess && companyData) {
       reset({
@@ -151,78 +178,206 @@ const Company = () => {
     }
   }, [isSuccess, companyData, reset]);
 
-  console.log("Company data:", companyData);
+  // Función para subir logo a Supabase Storage
+  const uploadLogoToStorage = async (file: File): Promise<string | null> => {
+    try {
+      if (!user) throw new Error("Usuario no autenticado");
 
-  // Función para manejar el cambio de archivo (comentada porque no se usa actualmente)
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     // Validar tamaño del archivo (5MB máximo)
-  //     if (file.size > 5 * 1024 * 1024) {
-  //       alert("El archivo debe ser menor a 5MB");
-  //       return;
-  //     }
+      console.log("Iniciando upload de logo:", {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        userId: user.id,
+      });
 
-  //     // Validar tipo de archivo
-  //     if (!file.type.startsWith("image/")) {
-  //       alert("Solo se permiten archivos de imagen");
-  //       return;
-  //     }
+      // Crear un nombre único para el archivo
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = fileName; // Cambiar para que no esté en subcarpeta
 
-  //     // Crear URL de preview
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       const result = e.target?.result as string;
-  //       setLogoPreview(result);
-  //       setValue("logo", result); // Actualizar el valor en react-hook-form
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
+      console.log("Subiendo archivo con path:", filePath);
+
+      // Subir archivo a Supabase Storage
+      const { data, error } = await supabase.storage
+        .from("company-logos")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: true, // Cambiar a true para permitir sobreescribir
+        });
+
+      if (error) {
+        console.error("Error uploading file:", error);
+        console.error("Error details:", {
+          message: error.message,
+          name: error.name,
+          cause: error.cause,
+        });
+        throw error;
+      }
+
+      console.log("Upload successful:", data);
+
+      // Obtener la URL pública del archivo
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("company-logos").getPublicUrl(filePath);
+
+      console.log("Public URL:", publicUrl);
+      return publicUrl;
+    } catch (error) {
+      console.error("Error en uploadLogoToStorage:", error);
+      return null;
+    }
+  };
+
+  // Función para eliminar logo anterior del Storage
+  const deleteOldLogo = async (logoUrl: string) => {
+    try {
+      console.log("Intentando eliminar logo anterior:", logoUrl);
+
+      // Extraer el path del archivo de la URL
+      const urlParts = logoUrl.split("/");
+      const fileName = urlParts[urlParts.length - 1];
+
+      console.log("Eliminando archivo:", fileName);
+
+      const { error } = await supabase.storage
+        .from("company-logos")
+        .remove([fileName]); // Sin subcarpeta
+
+      if (error) {
+        console.error("Error deleting old logo:", error);
+      } else {
+        console.log("Logo anterior eliminado correctamente");
+      }
+    } catch (error) {
+      console.error("Error en deleteOldLogo:", error);
+    }
+  };
+
+  // Función para manejar el cambio de archivo
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validar tamaño del archivo (2MB máximo)
+      if (file.size > 2 * 1024 * 1024) {
+        SweetModal(
+          "error",
+          t("common.error"),
+          "El archivo debe ser menor a 2MB",
+          t("common.Ok")
+        );
+        return;
+      }
+
+      // Validar tipo de archivo
+      if (!file.type.startsWith("image/")) {
+        SweetModal(
+          "error",
+          t("common.error"),
+          "Solo se permiten archivos de imagen",
+          t("common.Ok")
+        );
+        return;
+      }
+
+      // Guardar el archivo seleccionado para subirlo después
+      setSelectedFile(file);
+
+      // Crear URL de preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setLogoPreview(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
     setLogoPreview("");
+    setSelectedFile(null);
     reset();
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setLogoPreview("");
+    setSelectedFile(null);
     reset();
   };
 
-  const onSubmit = (data: CompanyFormData) => {
-    console.log("Datos del formulario:", data);
+  const onSubmit = async (data: CompanyFormData) => {
+    try {
+      let logoUrl = data.logo || companyData?.logo || "";
 
-    const dataToSend = {
-      name: data.name,
-      address: data.address,
-      identification: data.identification,
-      phone: data.phone,
-      email: data.email,
-    };
+      // Si hay un archivo seleccionado, subirlo primero
+      if (selectedFile) {
+        setIsUploadingLogo(true);
+        const uploadedLogoUrl = await uploadLogoToStorage(selectedFile);
+        setIsUploadingLogo(false);
 
-    // Guardar los datos usando la mutation
-    updateCompanyMutation.mutate(dataToSend, {
-      onSuccess: () => {
-        setIsEditing(false);
-        setLogoPreview("");
-        console.log("Empresa guardada exitosamente");
-      },
-      onError: (error: any) => {
-        console.error("Error al guardar la empresa:", error);
-        // Aquí podrías mostrar un toast o mensaje de error
-      },
-    });
+        if (uploadedLogoUrl) {
+          logoUrl = uploadedLogoUrl;
+
+          // Si había un logo anterior, eliminarlo (opcional)
+          if (companyData?.logo && companyData.logo !== logoUrl) {
+            await deleteOldLogo(companyData.logo);
+          }
+        } else {
+          SweetModal(
+            "error",
+            t("common.error"),
+            "Error al subir el logo",
+            t("common.Ok")
+          );
+          return;
+        }
+      }
+
+      const dataToSend = {
+        name: data.name,
+        address: data.address,
+        identification: data.identification,
+        phone: data.phone,
+        email: data.email,
+        logo: logoUrl,
+      };
+
+      // Guardar los datos usando la mutation
+      updateCompanyMutation.mutate(dataToSend, {
+        onSuccess: () => {
+          setIsEditing(false);
+          setLogoPreview("");
+          setSelectedFile(null);
+          console.log("Empresa guardada exitosamente");
+        },
+        onError: (error: any) => {
+          console.error("Error al guardar la empresa:", error);
+          SweetModal(
+            "error",
+            t("common.error"),
+            "Error al guardar la empresa",
+            t("common.Ok")
+          );
+        },
+      });
+    } catch (error) {
+      console.error("Error en onSubmit:", error);
+      setIsUploadingLogo(false);
+      SweetModal(
+        "error",
+        t("common.error"),
+        "Error al procesar los datos",
+        t("common.Ok")
+      );
+    }
   };
 
-  // Mostrar loader mientras se cargan los datos
   if (loading && !companyData) {
     return <Loader />;
   }
-
-  // return (<h1>hola</h1>)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -261,7 +416,9 @@ const Company = () => {
                     className={errors.name ? "border-red-500" : ""}
                   />
                   {errors.name && (
-                    <TextErrorSmall error={t(`errorsForm.${errors.name.message}`)} />
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.name.message}`)}
+                    />
                   )}
                 </div>
               ) : (
@@ -310,7 +467,6 @@ const Company = () => {
                     className={errors.address ? "border-red-500" : ""}
                   />
                   {errors.address && (
-                    
                     <TextErrorSmall
                       error={t(`errorsForm.${errors.address.message}`)}
                     />
@@ -375,7 +531,7 @@ const Company = () => {
             </div>
 
             {/* Logo */}
-            {/* <div className="space-y-2 md:col-span-2 pt-4 border-t">
+            <div className="space-y-2 md:col-span-2 pt-4 border-t">
               <Label htmlFor="logo" className="text-sm font-medium">
                 {t("company.logo")}
               </Label>
@@ -405,6 +561,11 @@ const Company = () => {
                       />
                       <p className="text-xs text-muted-foreground mt-1">
                         {t("company.formatSupported")}
+                        {selectedFile && (
+                          <span className="block text-blue-600 font-medium">
+                            {selectedFile.name}
+                          </span>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -423,19 +584,15 @@ const Company = () => {
                         alt="Logo de la empresa"
                         className="w-12 h-12 object-contain border rounded bg-white"
                       />
-                      <span className="text-sm text-muted-foreground">
-                        Logo cargado
-                      </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <Building2 className="w-12 h-12 p-2 border rounded bg-white" />
-                      <span className="text-sm">Sin logo</span>
                     </div>
                   )}
                 </div>
               )}
-            </div> */}
+            </div>
           </div>
         </CardContent>
 
@@ -446,7 +603,7 @@ const Company = () => {
               variant="outline"
               size="lg"
               type="button"
-              disabled={updateCompanyMutation.isPending}
+              disabled={updateCompanyMutation.isPending || isUploadingLogo}
             >
               <X className="h-4 w-4 mr-2" />
               {t("common.cancel")}
@@ -454,10 +611,12 @@ const Company = () => {
             <Button
               type="submit"
               size="lg"
-              disabled={updateCompanyMutation.isPending}
+              disabled={updateCompanyMutation.isPending || isUploadingLogo}
             >
               <Save className="h-4 w-4 mr-2" />
-              {updateCompanyMutation.isPending
+              {isUploadingLogo
+                ? "Subiendo logo..."
+                : updateCompanyMutation.isPending
                 ? t("common.loading")
                 : t("common.save")}
             </Button>
