@@ -53,9 +53,12 @@
   },
   "customers": {
     "addCustomer":"Add new customer",
+    "customersTitle":"Customer Management",
     "addCustomerTxt":"Complete the information for the new customer here",
     "editCustomer":"Edit customer",
     "editCustomerTxt":"Complete the information for the customer here",
+    "customerName": "Customer",
+    "registerDate": "Registration Date",
     "phone": "Phone",
     "address": "Address",
     "createCustomerSuccess": "Customer created successfully",

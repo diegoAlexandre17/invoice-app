@@ -137,15 +137,15 @@ const Customers = () => {
   // Componente específico para clientes usando el DataTable genérico
 
   const columns: Column[] = [
-    { key: "name", label: "Nombre", render: (value) => <div>{value}</div> },
+    { key: "name", label: t('customers.customerName'), render: (value) => <div>{value}</div> },
     {
       key: "email",
-      label: "Email",
+      label: t('common.email'),
       render: (value) => <div>{value || "-"}</div>,
     },
     {
       key: "phone",
-      label: "Teléfono",
+      label: t('customers.phone'),
       render: (value) => <div>{value || "-"}</div>,
     },
     {
@@ -155,12 +155,12 @@ const Customers = () => {
     },
     {
       key: "address",
-      label: "Dirección",
+      label: t('customers.address'),
       render: (value) => <div>{value || "-"}</div>,
     },
     {
       key: "created_at",
-      label: "Fecha de Registro",
+      label: t('customers.registerDate'),
       render: (value) => new Date(value).toLocaleDateString("es-ES"),
     },
     {
@@ -190,8 +190,7 @@ const Customers = () => {
     <DataTable
       data={customers}
       columns={columns}
-      title="Gestión de Clientes"
-      description="Lista completa de clientes registrados"
+      title={t("customers.customersTitle")}
       actions={
         <TabActions
           isModalOpen={isModalOpen}

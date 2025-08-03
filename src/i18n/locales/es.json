@@ -53,9 +53,12 @@
   },
   "customers": {
     "addCustomer":"Agregar nuevo cliente",
+    "customersTitle":"Gestión de Clientes",
     "addCustomerTxt":"Completa la información del nuevo cliente aquí",
     "editCustomer":"Editar cliente",
     "editCustomerTxt":"Completa la información del cliente aquí",
+    "customerName": "Cliente",
+    "registerDate": "Fecha de Registro",
     "phone": "Teléfono",
     "address": "Dirección",
     "createCustomerSuccess": "Cliente creado exitosamente",
