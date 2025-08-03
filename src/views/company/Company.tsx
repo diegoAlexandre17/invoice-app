@@ -469,7 +469,7 @@ const Company = () => {
             </div>
 
             {/* email */}
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
                 {`${t("common.email")}`}
               </Label>
@@ -495,7 +495,7 @@ const Company = () => {
             </div>
 
             {/* Logo */}
-            <div className="space-y-2 md:col-span-2 pt-4 border-t">
+            <div className="space-y-2">
               <Label htmlFor="logo" className="text-sm font-medium">
                 {t("company.logo")}
               </Label>
