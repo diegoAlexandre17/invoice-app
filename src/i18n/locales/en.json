@@ -104,6 +104,7 @@
     "nameRequired": "The name is required",
     "addressRequired": "The address is required",
     "identificationRequired": "The identification is required",
-    "phoneRequired": "The phone is required"
+    "phoneRequired": "The phone is required",
+    "emailHasBeenUsed": "The email has already been used"
   }
 } 
