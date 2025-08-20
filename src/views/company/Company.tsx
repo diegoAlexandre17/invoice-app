@@ -142,7 +142,7 @@ const Company = () => {
       SweetModal(
         "error",
         t("common.error"),
-        t('company.saveCompanyError'),
+        t("company.saveCompanyError"),
         t("common.Ok")
       );
     },
@@ -299,7 +299,7 @@ const Company = () => {
           SweetModal(
             "error",
             t("common.error"),
-            t('company.companyLogoError'),
+            t("company.companyLogoError"),
             t("common.Ok")
           );
           return;
@@ -578,9 +578,7 @@ const Company = () => {
               disabled={updateCompanyMutation.isPending || isUploadingLogo}
             >
               <Save className="h-4 w-4 mr-2" />
-              {isUploadingLogo
-                ? "Subiendo logo..."
-                : updateCompanyMutation.isPending
+              {isUploadingLogo || updateCompanyMutation.isPending
                 ? t("common.loading")
                 : t("common.save")}
             </Button>
