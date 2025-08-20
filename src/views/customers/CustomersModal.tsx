@@ -26,7 +26,7 @@ const customerSchema = z.object({
   email: z.email("emailRequired"),
   phone: z.string().max(15, "maxLength15").optional(),
   id: z.string().max(15, "maxLength15").optional(),
-  address: z.string().max(15, "maxLength60").optional(),
+  address: z.string().max(60, "maxLength60").optional(),
 });
 
 type CustomerFormData = z.infer<typeof customerSchema>;
