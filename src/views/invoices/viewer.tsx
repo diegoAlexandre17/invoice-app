@@ -1,11 +1,12 @@
+import InvoicePDF from '@/components/Invoice/InvoicePDF';
 import { PDFViewer } from '@react-pdf/renderer';
-import MyDocument from './test';
 
 const Viewer = () => (
   <div className='w-full h-[750px]'>
 
   <PDFViewer width={'100%'} height={'100%'}>
-    <MyDocument />
+    {/* <MyDocument /> */}
+    <InvoicePDF />
   </PDFViewer>
   </div>
 );
