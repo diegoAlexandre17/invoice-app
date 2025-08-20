@@ -76,6 +76,7 @@
   },
   "invoice": {
     "title": "Invoice",
+    "invoiceTxt":"Complete the invoice details here",
     "newInvoice": "New Invoice",
     "invoiceNumber": "Invoice Number",
     "date": "Date",

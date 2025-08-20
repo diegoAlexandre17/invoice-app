@@ -76,6 +76,7 @@
   },
   "invoice": {
     "title": "Factura",
+    "invoiceTxt":"Completa los datos de la factura aquí",
     "newInvoice": "Nueva Factura",
     "invoiceNumber": "Número de Factura",
     "date": "Fecha",
