@@ -137,38 +137,38 @@ const Customers = () => {
   // Componente específico para clientes usando el DataTable genérico
 
   const columns: Column[] = [
-    { key: "name", label: t('customers.customerName'), render: (value) => <div>{value}</div> },
+    { key: "name", label: t('customers.customerName'), render: (row) => <div>{row.name}</div> },
     {
       key: "email",
       label: t('common.email'),
-      render: (value) => <div>{value || "-"}</div>,
+      render: (row) => <div>{row.email || "-"}</div>,
     },
     {
       key: "phone",
       label: t('customers.phone'),
-      render: (value) => <div>{value || "-"}</div>,
+      render: (row) => <div>{row.phone || "-"}</div>,
     },
     {
       key: "id_number",
       label: "ID",
-      render: (value) => <div>{value || "-"}</div>,
+      render: (row) => <div>{row.id_number || "-"}</div>,
     },
     {
       key: "address",
       label: t('customers.address'),
-      render: (value) => <div>{value || "-"}</div>,
+      render: (row) => <div>{row.address || "-"}</div>,
     },
     {
       key: "created_at",
       label: t('customers.registerDate'),
-      render: (value) => new Date(value).toLocaleDateString("es-ES"),
+      render: (row) => new Date(row.created_at).toLocaleDateString("es-ES"),
     },
     {
       key: "actions",
       label: t('common.actions'),
       align: "right",
       width: "w-[100px]",
-      render: (_, row) => (
+      render: (row) => (
         <>
           <ActionTable
             icon={<SquarePen />}

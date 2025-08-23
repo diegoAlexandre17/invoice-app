@@ -27,29 +27,29 @@ const InvoicesTable = () => {
     {
       key: "id",
       label: "ID",
-      render: (value) => <div>{value || "-"}</div>,
+      render: (row) => <div>{row.id || "-"}</div>,
     },
     {
       key: "customer",
       label: t("customers.customerName"),
-      render: (value) => <div>{value}</div>,
+      render: (row) => <div>{row.customer}</div>,
     },
     {
       key: "created_at",
       label: t("customers.registerDate"),
-      render: (value) => new Date(value).toLocaleDateString("es-ES"),
+      render: (row) => new Date(row.created_at).toLocaleDateString("es-ES"),
     },
     {
       key: "amount",
       label: t("invoice.amount"),
-      render: (value) => <div>{value}</div>,
+      render: (row) => <div>{row.amount}</div>,
     },
     {
       key: "actions",
       label: t("common.actions"),
       align: "right",
       width: "w-[100px]",
-      render: () => (
+      render: (row) => (
         <>
           <ActionTable
             icon={<FileDown />}

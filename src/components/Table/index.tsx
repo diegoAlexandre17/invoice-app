@@ -113,7 +113,7 @@ export default function DataTable({
                       key={column.key}
                       className={`text-${column.align || "center"}`}
                     >
-                      {column.render(row[column.key], row)}
+                      {column.render(row, index)}
                     </TableCell>
                   ))}
                 </TableRow>

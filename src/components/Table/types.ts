@@ -4,7 +4,7 @@ export interface Column {
   label: string;
   width?: string;
   align?: "left" | "center" | "right";
-  render: (value: any, row: any) => React.ReactNode;
+  render: (row: any, index: number) => React.ReactNode;
 }
 
 // Props del componente
