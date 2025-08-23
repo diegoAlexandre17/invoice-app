@@ -14,8 +14,15 @@ const Customers = lazy(() => import("@/views/customers/Customers"));
 const Company = lazy(() => import("@/views/company/Company"));
 const InvoicesTable = lazy(() => import("@/views/invoices/InvoicesTable"));
 
+const DefaultRoute = '/admin/dashboard'
+
 const Router = () => {
   let element = useRoutes([
+    {
+        path: '/admin',
+        index: true,
+        element: <Navigate replace to={DefaultRoute} />
+    },
     {
       path: "/",
       element: <Navigate to="/login" />,
@@ -44,7 +51,7 @@ const Router = () => {
         </ProtectedRoute>
       ),
       children: [
-        { path: "/admin", element: <h1>Dashboard</h1> },
+        { path: "/admin/dashboard", element: <h1>Dashboard</h1> },
         { path: "/admin/invoices", element: <InvoicesTable/> },
         { path: "/admin/invoices/create", element: <InvoiceStepper /> },
         { path: "/admin/customers", element: <Customers /> },

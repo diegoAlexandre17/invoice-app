@@ -15,7 +15,7 @@ import { Link, useLocation } from "react-router-dom";
 import { UserDropDown } from "./UserDropDown";
 
 const items = [
-  { title: "dashboard", url: "/admin", icon: LayoutDashboard },
+  { title: "dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
   { title: "customers", url: "/admin/customers", icon: Handshake },
   { title: "invoices", url: "/admin/invoices", icon: Receipt },
   { title: "company", url: "/admin/company", icon: Building },
@@ -33,7 +33,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                const isActive = location.pathname === item.url;
+                const isActive = location.pathname.includes(item.title);
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
