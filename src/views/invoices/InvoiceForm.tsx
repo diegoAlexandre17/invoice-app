@@ -405,17 +405,15 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
       </Card>
 
       {/* Botón Siguiente */}
-      {fields.length > 0 && (
-        <div className="mt-6 flex justify-end">
-          <Button 
-            type="button" 
-            onClick={handleSubmit(handleNext)}
-            className="px-8 py-2"
-          >
-            {t('common.next') || 'Siguiente'}
-          </Button>
-        </div>
-      )}
+      <div className="mt-6 flex justify-end">
+        <Button 
+          type="button" 
+          onClick={handleSubmit(handleNext)}
+          className="px-8 py-2"
+        >
+          {t('common.next')}
+        </Button>
+      </div>
     </div>
   );
 };
