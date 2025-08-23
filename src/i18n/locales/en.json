@@ -22,7 +22,9 @@
     "maxLength15": "The field must be a maximum of 15 characters",
     "next":"Next",
     "back":"Back",
-    "finish":"Finish"
+    "finish":"Finish",
+    "download":"Download",
+    "actions": "Actions"
   },
   "auth": {
     "loginTitle": "Welcome Back",

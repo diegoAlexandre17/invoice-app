@@ -4,6 +4,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 import MainLayout from "../components/MainLayout";
 import InvoiceStepper from "@/views/invoices/InvoiceStepper";
 
+
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
 const Register = lazy(() => import("@/views/auth/Register"));
@@ -11,6 +12,7 @@ const RecoveryPassword = lazy(() => import("@/views/auth/RecoveryPassword"));
 const RessetPassword = lazy(() => import("@/views/auth/ResetPassword"));
 const Customers = lazy(() => import("@/views/customers/Customers"));
 const Company = lazy(() => import("@/views/company/Company"));
+const InvoicesTable = lazy(() => import("@/views/invoices/InvoicesTable"));
 
 const Router = () => {
   let element = useRoutes([
@@ -43,7 +45,8 @@ const Router = () => {
       ),
       children: [
         { path: "/admin", element: <h1>Dashboard</h1> },
-        { path: "/admin/invoice", element: <InvoiceStepper /> },
+        { path: "/admin/invoices", element: <InvoicesTable/> },
+        // { path: "/admin/invoice", element: <InvoiceStepper /> },
         { path: "/admin/customers", element: <Customers /> },
         { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas

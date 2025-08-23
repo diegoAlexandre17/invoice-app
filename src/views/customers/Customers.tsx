@@ -165,7 +165,7 @@ const Customers = () => {
     },
     {
       key: "actions",
-      label: "Acciones",
+      label: t('common.actions'),
       align: "right",
       width: "w-[100px]",
       render: (_, row) => (

@@ -17,7 +17,7 @@ import { UserDropDown } from "./UserDropDown";
 const items = [
   { title: "dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "customers", url: "/admin/customers", icon: Handshake },
-  { title: "invoices", url: "/admin/invoice", icon: Receipt },
+  { title: "invoices", url: "/admin/invoices", icon: Receipt },
   { title: "company", url: "/admin/company", icon: Building },
 ];
 

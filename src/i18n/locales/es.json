@@ -22,7 +22,9 @@
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
     "next":"Siguiente",
     "back":"Atrás",
-    "finish":"Finalizar"
+    "finish":"Finalizar",
+    "download":"Descargar",
+    "actions": "Acciones"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
