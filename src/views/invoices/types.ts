@@ -7,7 +7,7 @@ export interface InvoiceFormData {
   email: string;
   phone?: string;
   address?: string;
-  notes?: string;
+  notes?: string | undefined;
   items: Array<{
     description: string;
     quantity: number;

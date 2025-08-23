@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Page,
   Text,
@@ -8,56 +8,12 @@ import {
   Image,
 } from "@react-pdf/renderer";
 import Logo from "../../../public/figma-logo.jpeg";
-import type { InvoiceData } from './types';
-
+import type { InvoiceData } from "./types";
+import { useTranslation } from "react-i18next";
 
 interface InvoicePDFProps {
   data?: InvoiceData;
 }
-
-// Datos de ejemplo basados en la imagen
-const defaultInvoiceData: InvoiceData = {
-  invoiceNumber: "FAC-2025-001",
-  date: "07/08/2025",
-  dueDate: "22/08/2025",
-  company: {
-    name: "Acme S.A.",
-    nif: "NIF/CIF: B-12345678",
-    address: "Calle Falsa 123",
-    city: "Madrid, 28001",
-    phone: "Tel: +34 600 000 000",
-    email: "Email: facturacion@acme.com"
-  },
-  client: {
-    name: "Cliente de Ejemplo",
-    address: "Avenida Principal 456",
-    city: "Barcelona, 08001",
-    phone: "Tel: +34 611 111 111",
-    email: "Email: cliente@ejemplo.com"
-  },
-  items: [
-    {
-      description: "Servicio de consultoría",
-      quantity: 10,
-      unitPrice: 75.00,
-      total: 750.00
-    },
-    {
-      description: "Diseño de interfaz",
-      quantity: 5,
-      unitPrice: 95.00,
-      total: 475.00
-    },
-    {
-      description: "Mantenimiento mensual",
-      quantity: 1,
-      unitPrice: 120.00,
-      total: 120.00
-    }
-  ],
-  subtotal: 1345.00,
-  notes: "Gracias por su confianza. El pago debe realizarse por transferencia bancaria en un plazo de 15 días. Indique el número de factura en el concepto."
-};
 
 const styles = StyleSheet.create({
   page: {
@@ -67,7 +23,7 @@ const styles = StyleSheet.create({
     paddingVertical: 50,
     fontFamily: "Helvetica",
   },
-  
+
   // Header styles
   header: {
     marginBottom: 15,
@@ -76,34 +32,34 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  
+
   titleContainer: {
     marginBottom: 20,
   },
-  
+
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 15,
   },
-  
+
   invoiceInfo: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 15,
   },
-  
+
   invoiceDetails: {
     fontSize: 10,
     color: "#666",
   },
-  
+
   invoiceDetailLabel: {
     fontWeight: "bold",
     color: "#333",
   },
-  
+
   // Company and client info
   companyClientContainer: {
     flexDirection: "row",
@@ -111,17 +67,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     gap: 40,
   },
-  
+
   companySection: {
     flex: 1,
     paddingRight: 20,
   },
-  
+
   clientSection: {
     flex: 1,
     paddingLeft: 20,
   },
-  
+
   sectionTitle: {
     fontSize: 12,
     fontWeight: "bold",
@@ -131,20 +87,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
-  
+
   companyInfo: {
     fontSize: 10,
     color: "#666",
     lineHeight: 1.4,
   },
-  
+
   companyName: {
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 5,
   },
-  
+
   logo: {
     width: 60,
     height: 60,
@@ -152,12 +108,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     objectFit: "cover",
   },
-  
+
   // Table styles
   table: {
     marginBottom: 20,
   },
-  
+
   tableHeader: {
     flexDirection: "row",
     backgroundColor: "#f8f9fa",
@@ -166,7 +122,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 8,
   },
-  
+
   tableRow: {
     flexDirection: "row",
     borderLeftWidth: 1,
@@ -177,47 +133,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     minHeight: 35,
   },
-  
+
   tableHeaderText: {
     fontSize: 10,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
   },
-  
+
   tableCellText: {
     fontSize: 10,
     color: "#666",
     textAlign: "center",
   },
-  
+
   descriptionCol: {
     width: "40%",
     paddingRight: 10,
   },
-  
+
   quantityCol: {
     width: "15%",
   },
-  
+
   priceCol: {
     width: "20%",
   },
-  
+
   totalCol: {
     width: "25%",
   },
-  
+
   descriptionText: {
     textAlign: "left",
   },
-  
+
   // Total section
   totalSection: {
     alignItems: "flex-end",
     marginBottom: 30,
   },
-  
+
   totalContainer: {
     width: 200,
     borderWidth: 1,
@@ -225,37 +181,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8f9fa",
     padding: 15,
   },
-  
+
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 5,
   },
-  
+
   totalLabel: {
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
   },
-  
+
   totalAmount: {
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
   },
-  
+
   // Notes section
   notesSection: {
     marginTop: 30,
   },
-  
+
   notesTitle: {
     fontSize: 12,
     fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
   },
-  
+
   notesText: {
     fontSize: 10,
     color: "#666",
@@ -264,8 +220,20 @@ const styles = StyleSheet.create({
   },
 });
 
+// Función para formatear la fecha actual en formato dd/mm/yyyy
+
+
 const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
-  const invoiceData = data || defaultInvoiceData;
+  const invoiceData = data;
+
+  const { t } = useTranslation();
+
+  // Si no hay datos, no renderizar nada
+  if (!invoiceData) {
+    return null;
+  }
+
+  console.log("Rendering PDF with data:", invoiceData);
 
   return (
     <Document>
@@ -275,20 +243,19 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
           <View style={styles.titleContainer}>
             <Image src={Logo} style={styles.logo} />
           </View>
-          
+
           <View style={styles.invoiceInfo}>
             <View>
+              {invoiceData?.invoiceNumber && (
+                <Text style={styles.invoiceDetails}>
+                  <Text style={styles.invoiceDetailLabel}>N°: </Text>
+                  {invoiceData.invoiceNumber}
+                </Text>
+              )}
               <Text style={styles.invoiceDetails}>
-                <Text style={styles.invoiceDetailLabel}>N°: </Text>
-                {invoiceData.invoiceNumber}
-              </Text>
-              <Text style={styles.invoiceDetails}>
-                <Text style={styles.invoiceDetailLabel}>Fecha: </Text>
-                {invoiceData.date}
-              </Text>
-              <Text style={styles.invoiceDetails}>
-                <Text style={styles.invoiceDetailLabel}>Vencimiento: </Text>
-                {invoiceData.dueDate}
+                <Text style={styles.invoiceDetailLabel}>
+                  {`${t("invoice.date")}: ${invoiceData.date}`}
+                </Text>
               </Text>
             </View>
           </View>
@@ -298,80 +265,114 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
         <View style={styles.companyClientContainer}>
           <View style={styles.companySection}>
             <Text style={styles.sectionTitle}>Empresa</Text>
-            <Text style={styles.companyName}>{invoiceData.company.name}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.company.nif}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.company.address}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.company.city}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.company.phone}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.company.email}</Text>
+            {invoiceData.company?.name && (
+              <Text style={styles.companyName}>{invoiceData.company.name}</Text>
+            )}
+            {invoiceData.company?.nif && (
+              <Text style={styles.companyInfo}>{invoiceData.company.nif}</Text>
+            )}
+            {invoiceData.company?.address && (
+              <Text style={styles.companyInfo}>
+                {invoiceData.company.address}
+              </Text>
+            )}
+            {invoiceData.company?.city && (
+              <Text style={styles.companyInfo}>{invoiceData.company.city}</Text>
+            )}
+            {invoiceData.company?.phone && (
+              <Text style={styles.companyInfo}>{invoiceData.company.phone}</Text>
+            )}
+            {invoiceData.company?.email && (
+              <Text style={styles.companyInfo}>{invoiceData.company.email}</Text>
+            )}
           </View>
-          
+
           <View style={styles.clientSection}>
             <Text style={styles.sectionTitle}>Cliente</Text>
-            <Text style={styles.companyName}>{invoiceData.client.name}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.client.address}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.client.city}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.client.phone}</Text>
-            <Text style={styles.companyInfo}>{invoiceData.client.email}</Text>
+            {invoiceData.client?.name && (
+              <Text style={styles.companyName}>{invoiceData.client.name}</Text>
+            )}
+            {invoiceData.client?.address && (
+              <Text style={styles.companyInfo}>{invoiceData.client.address}</Text>
+            )}
+            {invoiceData.client?.city && (
+              <Text style={styles.companyInfo}>{invoiceData.client.city}</Text>
+            )}
+            {invoiceData.client?.phone && (
+              <Text style={styles.companyInfo}>{invoiceData.client.phone}</Text>
+            )}
+            {invoiceData.client?.email && (
+              <Text style={styles.companyInfo}>{invoiceData.client.email}</Text>
+            )}
           </View>
         </View>
 
         {/* Tabla de productos/servicios */}
-        <View style={styles.table}>
-          {/* Header de la tabla */}
-          <View style={styles.tableHeader}>
-            <View style={styles.descriptionCol}>
-              <Text style={styles.tableHeaderText}>Descripción</Text>
-            </View>
-            <View style={styles.quantityCol}>
-              <Text style={styles.tableHeaderText}>Cantidad</Text>
-            </View>
-            <View style={styles.priceCol}>
-              <Text style={styles.tableHeaderText}>Precio unitario</Text>
-            </View>
-            <View style={styles.totalCol}>
-              <Text style={styles.tableHeaderText}>Total</Text>
-            </View>
-          </View>
-          
-          {/* Filas de la tabla */}
-          {invoiceData.items.map((item, index) => (
-            <View key={index} style={styles.tableRow}>
+        {invoiceData.items && invoiceData.items.length > 0 && (
+          <View style={styles.table}>
+            {/* Header de la tabla */}
+            <View style={styles.tableHeader}>
               <View style={styles.descriptionCol}>
-                <Text style={[styles.tableCellText, styles.descriptionText]}>
-                  {item.description}
-                </Text>
+                <Text style={styles.tableHeaderText}>Descripción</Text>
               </View>
               <View style={styles.quantityCol}>
-                <Text style={styles.tableCellText}>{item.quantity}</Text>
+                <Text style={styles.tableHeaderText}>Cantidad</Text>
               </View>
               <View style={styles.priceCol}>
-                <Text style={styles.tableCellText}>{item.unitPrice.toFixed(2)} €</Text>
+                <Text style={styles.tableHeaderText}>Precio unitario</Text>
               </View>
               <View style={styles.totalCol}>
-                <Text style={styles.tableCellText}>{item.total.toFixed(2)} €</Text>
+                <Text style={styles.tableHeaderText}>Total</Text>
               </View>
             </View>
-          ))}
-        </View>
+
+            {/* Filas de la tabla */}
+            {invoiceData.items.map((item, index) => (
+              <View key={index} style={styles.tableRow}>
+                <View style={styles.descriptionCol}>
+                  <Text style={[styles.tableCellText, styles.descriptionText]}>
+                    {item.description}
+                  </Text>
+                </View>
+                <View style={styles.quantityCol}>
+                  <Text style={styles.tableCellText}>{item.quantity}</Text>
+                </View>
+                <View style={styles.priceCol}>
+                  <Text style={styles.tableCellText}>
+                    {item.unitPrice.toFixed(2)} €
+                  </Text>
+                </View>
+                <View style={styles.totalCol}>
+                  <Text style={styles.tableCellText}>
+                    {item.total.toFixed(2)} €
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* Sección de total */}
-        <View style={styles.totalSection}>
-          <View style={styles.totalContainer}>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalAmount}>{invoiceData.subtotal.toFixed(2)} €</Text>
+        {invoiceData.subtotal !== undefined && invoiceData.subtotal !== null && (
+          <View style={styles.totalSection}>
+            <View style={styles.totalContainer}>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalAmount}>
+                  {invoiceData.subtotal.toFixed(2)} €
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        )}
 
         {/* Notas */}
-        <View style={styles.notesSection}>
-          <Text style={styles.notesTitle}>Notas</Text>
-          <Text style={styles.notesText}>
-            {invoiceData.notes || "Gracias por su confianza. El pago debe realizarse por transferencia bancaria en un plazo de 15 días. Indique el número de factura en el concepto."}
-          </Text>
-        </View>
+        {invoiceData?.notes && (
+          <View style={styles.notesSection}>
+            <Text style={styles.notesTitle}>Notas</Text>
+            <Text style={styles.notesText}>{invoiceData.notes}</Text>
+          </View>
+        )}
       </Page>
     </Document>
   );

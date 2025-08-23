@@ -25,10 +25,9 @@ export interface Client {
 export interface InvoiceData {
   invoiceNumber: string;
   date: string;
-  dueDate: string;
   company: Company;
   client: Client;
   items: InvoiceItem[];
   subtotal: number;
-  notes: string;
+  notes: string | undefined;
 }
