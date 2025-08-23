@@ -368,7 +368,9 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
         {/* Notas */}
         <View style={styles.notesSection}>
           <Text style={styles.notesTitle}>Notas</Text>
-          <Text style={styles.notesText}>{invoiceData.notes}</Text>
+          <Text style={styles.notesText}>
+            {invoiceData.notes || "Gracias por su confianza. El pago debe realizarse por transferencia bancaria en un plazo de 15 días. Indique el número de factura en el concepto."}
+          </Text>
         </View>
       </Page>
     </Document>

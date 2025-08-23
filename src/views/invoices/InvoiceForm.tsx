@@ -7,14 +7,20 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
+import type { InvoiceFormData } from "./types";
+
+interface InvoiceFormProps {
+  onNext?: (formData: InvoiceFormData) => void;
+  initialData?: InvoiceFormData;
+}
 
 const invoiceItemSchema = z.object({
   description: z.string().min(1, "nameRequired").max(120, "maxLength120"),
@@ -29,25 +35,8 @@ const invoiceSchema = z.object({
   phone: z.string().max(15, "maxLength15").optional(),
   address: z.string().max(60, "maxLength60").optional(),
   items: z.array(invoiceItemSchema).min(1, "itemsRequired"),
+  notes: z.string().max(500, "maxLength500").optional(),
 });
-
-type InvoiceFormData = z.infer<typeof invoiceSchema>;
-
-interface InvoiceFormProps {
-  onNext?: (formData: any) => void;
-  initialData?: {
-    name: string;
-    id?: string;
-    email: string;
-    phone?: string;
-    address?: string;
-    items: Array<{
-      description: string;
-      quantity: number;
-      unitPrice: number;
-    }>;
-  };
-}
 
 const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
   const { t } = useTranslation();
@@ -68,6 +57,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
       address: "",
       phone: "",
       email: "",
+      notes: "",
       items: [],
     },
   });
@@ -81,6 +71,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
         address: initialData.address || "",
         phone: initialData.phone || "",
         email: initialData.email || "",
+        notes: initialData.notes || "",
         items: initialData.items || [],
       });
     }
@@ -231,6 +222,27 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
                 {errors.phone && (
                   <TextErrorSmall
                     error={t(`errorsForm.${errors.phone.message}`)}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* notes */}
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="notes" className="text-sm font-medium">
+                {`${t("invoice.notes") || "Notas"}`}
+              </Label>
+
+              <div>
+                <Textarea
+                  id="notes"
+                  {...register("notes")}
+                  className={errors.notes ? "border-red-500" : ""}
+                  placeholder={t("invoice.notesPlaceholder") || "Ingresa notas adicionales para la factura (opcional)"}
+                />
+                {errors.notes && (
+                  <TextErrorSmall
+                    error={t(`errorsForm.${errors.notes.message}`)}
                   />
                 )}
               </div>

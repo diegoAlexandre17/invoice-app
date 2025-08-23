@@ -98,7 +98,9 @@
     "itemTotal": "Total del item:",
     "noItems": "No hay items agregados aún",
     "preview":"Vista previa",
-    "previewDescription": "Revisa y completa la creación de tu factura"
+    "previewDescription": "Revisa y completa la creación de tu factura",
+    "notes": "Notas",
+    "notesPlaceholder": "Ingresa notas adicionales para la factura (opcional)"
   },
   "company": {
     "companyInfo": "Información de la Empresa",
@@ -115,6 +117,7 @@
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
     "maxLength60": "El campo debe tener un máximo de 60 caracteres",
     "maxLength120": "El campo debe tener un máximo de 120 caracteres",
+    "maxLength500": "El campo debe tener un máximo de 500 caracteres",
     "emailRequired": "Introduzca una dirección de correo electrónico válida",
     "nameRequired": "El nombre es requerido",
     "addressRequired": "La dirección es requerida",

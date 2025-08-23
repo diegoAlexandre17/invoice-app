@@ -98,7 +98,9 @@
     "itemTotal": "Item total:",
     "noItems": "No items added yet",
     "preview":"Preview",
-    "previewDescription": "Review and complete the creation of your invoice"
+    "previewDescription": "Review and complete the creation of your invoice",
+    "notes": "Notes",
+    "notesPlaceholder": "Enter additional notes for the invoice (optional)"
   },
   "company": {
     "companyInfo": "Company Information",
@@ -115,6 +117,7 @@
     "maxLength15": "The field must be a maximum of 15 characters",
     "maxLength60": "The field must be a maximum of 60 characters",
     "maxLength120": "The field must be a maximum of 120 characters",
+    "maxLength500": "The field must be a maximum of 500 characters",
     "emailRequired": "Please enter a valid email address",
     "nameRequired": "The name is required",
     "addressRequired": "The address is required",

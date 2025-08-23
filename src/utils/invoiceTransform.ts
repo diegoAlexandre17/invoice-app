@@ -1,21 +1,8 @@
 import type { InvoiceData, InvoiceItem } from '../components/Invoice/types';
-
-// Tipo que representa los datos del formulario
-export interface FormInvoiceData {
-  name: string;
-  id?: string;
-  email: string;
-  phone?: string;
-  address?: string;
-  items: Array<{
-    description: string;
-    quantity: number;
-    unitPrice: number;
-  }>;
-}
+import type { InvoiceFormData } from '../views/invoices/types';
 
 // Función para transformar los datos del formulario al formato InvoiceData
-export const transformFormDataToInvoiceData = (formData: FormInvoiceData, companyData?: any): InvoiceData => {
+export const transformFormDataToInvoiceData = (formData: InvoiceFormData, companyData?: any): InvoiceData => {
   // Calcular el total de cada item
   const items: InvoiceItem[] = formData.items.map(item => ({
     description: item.description,
@@ -65,6 +52,6 @@ export const transformFormDataToInvoiceData = (formData: FormInvoiceData, compan
     },
     items,
     subtotal,
-    notes: "Gracias por su confianza. El pago debe realizarse por transferencia bancaria en un plazo de 30 días. Indique el número de factura en el concepto."
+    notes: formData.notes || "Gracias por su confianza. El pago debe realizarse por transferencia bancaria en un plazo de 30 días. Indique el número de factura en el concepto."
   };
 };

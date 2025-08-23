@@ -3,24 +3,14 @@ import { useTranslation } from "react-i18next";
 import Stepper, { StepperNavigation } from "@/components/ui/stepper";
 import InvoiceForm from "./InvoiceForm";
 import InvoiceViewer from "./InvoiceViewer";
+import type { InvoiceFormData } from "./types";
 
 
 
 const InvoiceStepper = () => {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<{
-    name: string;
-    id?: string;
-    email: string;
-    phone?: string;
-    address?: string;
-    items: Array<{
-      description: string;
-      quantity: number;
-      unitPrice: number;
-    }>;
-  } | null>(null);
+  const [formData, setFormData] = useState<InvoiceFormData | null>(null);
 
   const steps = [
   {
@@ -46,7 +36,7 @@ const InvoiceStepper = () => {
     }
   };
 
-  const handleFormNext = (data: any) => {
+  const handleFormNext = (data: InvoiceFormData) => {
     // Guardar los datos y avanzar al siguiente paso
     setFormData(data);
     handleNext();
