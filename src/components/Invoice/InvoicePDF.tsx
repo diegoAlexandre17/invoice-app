@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import Logo from "../../../public/figma-logo.jpeg";
 import type { InvoiceData } from "./types";
 import { useTranslation } from "react-i18next";
 
@@ -203,6 +202,7 @@ const styles = StyleSheet.create({
   // Notes section
   notesSection: {
     marginTop: 30,
+    padding: 15,
   },
 
   notesTitle: {
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
+    paddingBottom: 5,
   },
 
   notesText: {
@@ -217,10 +218,10 @@ const styles = StyleSheet.create({
     color: "#666",
     lineHeight: 1.4,
     textAlign: "justify",
+    wordWrap: "break-word",
+    maxWidth: "100%",
   },
 });
-
-// Función para formatear la fecha actual en formato dd/mm/yyyy
 
 const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
   const invoiceData = data;
