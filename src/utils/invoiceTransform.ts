@@ -35,20 +35,13 @@ export const transformFormDataToInvoiceData = (
   return {
     invoiceNumber,
     date: formatDate(new Date()),
-    company: companyData || {
-      name: "Tu Empresa S.A.",
-      nif: "NIF/CIF: B-00000000",
-      address: "Tu Dirección",
-      city: "Tu Ciudad, 00000",
-      phone: "Tel: +34 000 000 000",
-      email: "Email: tu@empresa.com",
-    },
+    company: companyData,
     client: {
+      id: formData.id || '',
       name: formData.name,
       address: formData.address || "",
-      city: "", // Podrías separar ciudad de dirección si es necesario
-      phone: formData.phone ? `Tel: ${formData.phone}` : "",
-      email: `Email: ${formData.email}`,
+      phone: formData.phone ? `${formData.phone}` : "",
+      email: `${formData.email}`,
     },
     items,
     subtotal,

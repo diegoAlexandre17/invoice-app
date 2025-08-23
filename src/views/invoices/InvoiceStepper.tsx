@@ -5,8 +5,6 @@ import InvoiceForm from "./InvoiceForm";
 import InvoiceViewer from "./InvoiceViewer";
 import type { InvoiceFormData } from "./types";
 
-
-
 const InvoiceStepper = () => {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);

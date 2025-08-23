@@ -7,17 +7,17 @@ export interface InvoiceItem {
 
 export interface Company {
   name: string;
-  nif: string;
+  id: string;
   address: string;
-  city: string;
   phone: string;
   email: string;
+  logo?: string;
 }
 
 export interface Client {
+  id: string;
   name: string;
   address: string;
-  city: string;
   phone: string;
   email: string;
 }

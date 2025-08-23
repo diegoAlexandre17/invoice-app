@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
   // Header styles
   header: {
-    marginBottom: 15,
+    marginBottom: 10,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -222,27 +222,27 @@ const styles = StyleSheet.create({
 
 // Función para formatear la fecha actual en formato dd/mm/yyyy
 
-
 const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
   const invoiceData = data;
 
   const { t } = useTranslation();
+  console.log(invoiceData)
 
   // Si no hay datos, no renderizar nada
   if (!invoiceData) {
     return null;
   }
 
-  console.log("Rendering PDF with data:", invoiceData);
-
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header con logo y título */}
         <View style={styles.header}>
-          <View style={styles.titleContainer}>
-            <Image src={Logo} style={styles.logo} />
-          </View>
+          {invoiceData.company?.logo && (
+            <View style={styles.titleContainer}>
+              <Image src={invoiceData.company?.logo} style={styles.logo} />
+            </View>
+          )}
 
           <View style={styles.invoiceInfo}>
             <View>
@@ -264,45 +264,60 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
         {/* Información de empresa y cliente */}
         <View style={styles.companyClientContainer}>
           <View style={styles.companySection}>
-            <Text style={styles.sectionTitle}>Empresa</Text>
+            <Text style={styles.sectionTitle}>{t("company.companyInfo")}</Text>
             {invoiceData.company?.name && (
               <Text style={styles.companyName}>{invoiceData.company.name}</Text>
             )}
-            {invoiceData.company?.nif && (
-              <Text style={styles.companyInfo}>{invoiceData.company.nif}</Text>
+            {invoiceData.company?.id && (
+              <Text
+                style={styles.companyInfo}
+              >{`ID: ${invoiceData.company.id}`}</Text>
             )}
             {invoiceData.company?.address && (
               <Text style={styles.companyInfo}>
-                {invoiceData.company.address}
+                {`${t("customers.address")}: ${invoiceData.company.address}`}
               </Text>
             )}
-            {invoiceData.company?.city && (
-              <Text style={styles.companyInfo}>{invoiceData.company.city}</Text>
-            )}
+
             {invoiceData.company?.phone && (
-              <Text style={styles.companyInfo}>{invoiceData.company.phone}</Text>
+              <Text style={styles.companyInfo}>
+                {`${t("customers.phone")}: ${invoiceData.company.phone}`}
+              </Text>
             )}
             {invoiceData.company?.email && (
-              <Text style={styles.companyInfo}>{invoiceData.company.email}</Text>
+              <Text style={styles.companyInfo}>
+                {`Email: ${invoiceData.company.email}`}
+              </Text>
             )}
           </View>
 
           <View style={styles.clientSection}>
-            <Text style={styles.sectionTitle}>Cliente</Text>
+            <Text style={styles.sectionTitle}>{t("invoice.client")}</Text>
             {invoiceData.client?.name && (
               <Text style={styles.companyName}>{invoiceData.client.name}</Text>
             )}
+
+            {invoiceData.client?.id && (
+              <Text
+                style={styles.companyInfo}
+              >{`ID: ${invoiceData.client.id}`}</Text>
+            )}
+
             {invoiceData.client?.address && (
-              <Text style={styles.companyInfo}>{invoiceData.client.address}</Text>
+              <Text style={styles.companyInfo}>
+                {`${t("customers.address")}: ${invoiceData.client.address}`}
+              </Text>
             )}
-            {invoiceData.client?.city && (
-              <Text style={styles.companyInfo}>{invoiceData.client.city}</Text>
-            )}
+
             {invoiceData.client?.phone && (
-              <Text style={styles.companyInfo}>{invoiceData.client.phone}</Text>
+              <Text style={styles.companyInfo}>{`${t("customers.phone")}: ${
+                invoiceData.client.phone
+              }`}</Text>
             )}
             {invoiceData.client?.email && (
-              <Text style={styles.companyInfo}>{invoiceData.client.email}</Text>
+              <Text
+                style={styles.companyInfo}
+              >{`Email: ${invoiceData.client.email}`}</Text>
             )}
           </View>
         </View>
@@ -313,13 +328,19 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
             {/* Header de la tabla */}
             <View style={styles.tableHeader}>
               <View style={styles.descriptionCol}>
-                <Text style={styles.tableHeaderText}>Descripción</Text>
+                <Text style={styles.tableHeaderText}>
+                  {t("invoice.description")}
+                </Text>
               </View>
               <View style={styles.quantityCol}>
-                <Text style={styles.tableHeaderText}>Cantidad</Text>
+                <Text style={styles.tableHeaderText}>
+                  {t("invoice.quantity")}
+                </Text>
               </View>
               <View style={styles.priceCol}>
-                <Text style={styles.tableHeaderText}>Precio unitario</Text>
+                <Text style={styles.tableHeaderText}>
+                  {t("invoice.unitPrice")}
+                </Text>
               </View>
               <View style={styles.totalCol}>
                 <Text style={styles.tableHeaderText}>Total</Text>
@@ -353,23 +374,24 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
         )}
 
         {/* Sección de total */}
-        {invoiceData.subtotal !== undefined && invoiceData.subtotal !== null && (
-          <View style={styles.totalSection}>
-            <View style={styles.totalContainer}>
-              <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalAmount}>
-                  {invoiceData.subtotal.toFixed(2)} €
-                </Text>
+        {invoiceData.subtotal !== undefined &&
+          invoiceData.subtotal !== null && (
+            <View style={styles.totalSection}>
+              <View style={styles.totalContainer}>
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalAmount}>
+                    {invoiceData.subtotal.toFixed(2)} €
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
+          )}
 
         {/* Notas */}
         {invoiceData?.notes && (
           <View style={styles.notesSection}>
-            <Text style={styles.notesTitle}>Notas</Text>
+            <Text style={styles.notesTitle}>{t("invoice.notes")}</Text>
             <Text style={styles.notesText}>{invoiceData.notes}</Text>
           </View>
         )}
