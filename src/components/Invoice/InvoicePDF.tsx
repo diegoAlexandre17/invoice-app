@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import type { InvoiceData } from "./types";
+import type { InvoiceData } from "../../views/invoices/types";
 import { useTranslation } from "react-i18next";
 
 interface InvoicePDFProps {

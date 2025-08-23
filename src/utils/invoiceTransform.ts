@@ -1,5 +1,4 @@
-import type { InvoiceData, InvoiceItem } from "../components/Invoice/types";
-import type { InvoiceFormData } from "../views/invoices/types";
+import type { InvoiceData, InvoiceItem, InvoiceFormData } from "../views/invoices/types";
 
 // Función para transformar los datos del formulario al formato InvoiceData
 export const transformFormDataToInvoiceData = (
