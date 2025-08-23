@@ -46,7 +46,7 @@ const Router = () => {
       children: [
         { path: "/admin", element: <h1>Dashboard</h1> },
         { path: "/admin/invoices", element: <InvoicesTable/> },
-        // { path: "/admin/invoice", element: <InvoiceStepper /> },
+        { path: "/admin/invoices/create", element: <InvoiceStepper /> },
         { path: "/admin/customers", element: <Customers /> },
         { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas

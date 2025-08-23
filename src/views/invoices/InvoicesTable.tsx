@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { FileDown, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const TabActions = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <>
-      <Button onClick={() => {}} size="lg">
+      <Button onClick={() => navigate("/admin/invoices/create")} size="lg">
         <Plus className="mr-2 h-4 w-4" />
         {t("invoice.newInvoice")}
       </Button>
