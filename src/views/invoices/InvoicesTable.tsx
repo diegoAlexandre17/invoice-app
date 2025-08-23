@@ -1,5 +1,6 @@
 import DataTable from "@/components/Table";
 import { ActionTable } from "@/components/Table/ActionTable";
+import type { Column } from "@/components/Table/types";
 import { Button } from "@/components/ui/button";
 import { FileDown, Plus } from "lucide-react";
 import { useState } from "react";
@@ -22,7 +23,7 @@ const InvoicesTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
 
-  const columns = [
+  const columns : Column[] = [
     {
       key: "id",
       label: "ID",
