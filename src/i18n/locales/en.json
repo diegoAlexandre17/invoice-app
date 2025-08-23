@@ -19,7 +19,10 @@
     "Ok":"Accept",
     "search": "Search",
     "noData": "No data available",
-    "maxLength15": "The field must be a maximum of 15 characters"
+    "maxLength15": "The field must be a maximum of 15 characters",
+    "next":"Next",
+    "back":"Back",
+    "finish":"Finish"
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -93,7 +96,9 @@
     "addItem": "Add Item",
     "item": "Item",
     "itemTotal": "Item total:",
-    "noItems": "No items added yet"
+    "noItems": "No items added yet",
+    "preview":"Preview",
+    "previewDescription": "Review and complete the creation of your invoice"
   },
   "company": {
     "companyInfo": "Company Information",

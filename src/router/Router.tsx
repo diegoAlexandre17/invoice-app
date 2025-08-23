@@ -2,8 +2,7 @@ import { Navigate, useRoutes } from "react-router-dom";
 import { lazy } from "react";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import MainLayout from "../components/MainLayout";
-import Viewer from "@/views/invoices/viewer";
-import InvoiceForm from "@/views/invoices/InvoiceForm";
+import InvoiceStepper from "@/views/invoices/InvoiceStepper";
 
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
@@ -44,7 +43,7 @@ const Router = () => {
       ),
       children: [
         { path: "/admin", element: <h1>Dashboard</h1> },
-        { path: "/admin/invoice", element: <InvoiceForm /> },
+        { path: "/admin/invoice", element: <InvoiceStepper /> },
         { path: "/admin/customers", element: <Customers /> },
         { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas

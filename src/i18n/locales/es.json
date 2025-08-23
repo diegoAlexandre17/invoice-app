@@ -19,7 +19,10 @@
     "Ok": "Aceptar",
     "search": "Buscar",
     "noData": "Sin datos",
-    "maxLength15": "El campo debe tener un máximo de 15 caracteres"
+    "maxLength15": "El campo debe tener un máximo de 15 caracteres",
+    "next":"Siguiente",
+    "back":"Atrás",
+    "finish":"Finalizar"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
@@ -93,7 +96,9 @@
     "addItem": "Agregar Item",
     "item": "Item",
     "itemTotal": "Total del item:",
-    "noItems": "No hay items agregados aún"
+    "noItems": "No hay items agregados aún",
+    "preview":"Vista previa",
+    "previewDescription": "Revisa y completa la creación de tu factura"
   },
   "company": {
     "companyInfo": "Información de la Empresa",

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Save, X, Plus, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -33,7 +33,23 @@ const invoiceSchema = z.object({
 
 type InvoiceFormData = z.infer<typeof invoiceSchema>;
 
-const InvoiceForm = () => {
+interface InvoiceFormProps {
+  onNext?: (formData: any) => void;
+  initialData?: {
+    name: string;
+    id?: string;
+    email: string;
+    phone?: string;
+    address?: string;
+    items: Array<{
+      description: string;
+      quantity: number;
+      unitPrice: number;
+    }>;
+  };
+}
+
+const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
   const { t } = useTranslation();
 
   const {
@@ -42,8 +58,10 @@ const InvoiceForm = () => {
     formState: { errors },
     control,
     watch,
+    reset,
   } = useForm<InvoiceFormData>({
     resolver: zodResolver(invoiceSchema),
+    mode: "onTouched", // Validar cuando el usuario toque los campos
     defaultValues: {
       name: "",
       id: "",
@@ -54,6 +72,20 @@ const InvoiceForm = () => {
     },
   });
 
+  // Restablecer el formulario cuando cambien los datos iniciales
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        name: initialData.name || "",
+        id: initialData.id || "",
+        address: initialData.address || "",
+        phone: initialData.phone || "",
+        email: initialData.email || "",
+        items: initialData.items || [],
+      });
+    }
+  }, [initialData, reset]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
@@ -61,8 +93,9 @@ const InvoiceForm = () => {
 
   const watchedItems = watch("items");
 
-  const onSubmit = (data: InvoiceFormData) => {
-    console.log(data);
+  const handleNext = (data: InvoiceFormData) => {
+    console.log("Formulario válido, avanzando al siguiente paso:", data);
+    onNext?.(data);
   };
 
   // Estado para el nuevo item
@@ -98,17 +131,8 @@ const InvoiceForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <Card className="w-full">
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
-          <div>
-            <CardTitle className="text-2xl">
-              {t("invoice.newInvoice")}
-            </CardTitle>
-            <CardDescription>{t("invoice.invoiceTxt")}</CardDescription>
-          </div>
-        </CardHeader>
-
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <div className="space-y-2">
@@ -380,27 +404,19 @@ const InvoiceForm = () => {
         </CardContent>
       </Card>
 
-      <div className="flex gap-2 justify-end my-6">
-        <Button
-          //   onClick={handleCancel}
-          variant="outline"
-          size="lg"
-          type="button"
-          //   disabled={updateCompanyMutation.isPending || isUploadingLogo}
-        >
-          <X className="h-4 w-4 mr-2" />
-          {t("common.cancel")}
-        </Button>
-        <Button
-          type="submit"
-          size="lg"
-          //   disabled={updateCompanyMutation.isPending || isUploadingLogo}
-        >
-          <Save className="h-4 w-4 mr-2" />
-          {t("common.save")}
-        </Button>
-      </div>
-    </form>
+      {/* Botón Siguiente */}
+      {fields.length > 0 && (
+        <div className="mt-6 flex justify-end">
+          <Button 
+            type="button" 
+            onClick={handleSubmit(handleNext)}
+            className="px-8 py-2"
+          >
+            {t('common.next') || 'Siguiente'}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 
