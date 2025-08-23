@@ -126,7 +126,6 @@ export const StepperNavigation: React.FC<StepperNavigationProps> = ({
       <div>
         {!isFirstStep && (
           <Button
-            variant="outline"
             onClick={handlePrevious}
             className="flex items-center gap-2"
           >
