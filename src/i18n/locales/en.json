@@ -7,6 +7,7 @@
     "submit": "Submit",
     "cancel": "Cancel",
     "save": "Save",
+    "saving": "Saving...",
     "update": "Update",
     "edit": "Edit",
     "delete": "Delete",
@@ -102,7 +103,9 @@
     "preview":"Preview",
     "previewDescription": "Review and complete the creation of your invoice",
     "notes": "Notes",
-    "notesPlaceholder": "Enter additional notes for the invoice (optional)"
+    "notesPlaceholder": "Enter additional notes for the invoice (optional)",
+    "saveInvoice": "Save Invoice",
+    "saveInvoiceSuccess": "Invoice saved successfully"
   },
   "company": {
     "companyInfo": "Company Information",

@@ -7,6 +7,7 @@
     "submit": "Enviar",
     "cancel": "Cancelar",
     "save": "Guardar",
+    "saving": "Guardando...",
     "update": "Actualizar",
     "edit": "Editar",
     "delete": "Eliminar",
@@ -102,7 +103,9 @@
     "preview":"Vista previa",
     "previewDescription": "Revisa y completa la creación de tu factura",
     "notes": "Notas",
-    "notesPlaceholder": "Ingresa notas adicionales para la factura (opcional)"
+    "notesPlaceholder": "Ingresa notas adicionales para la factura (opcional)",
+    "saveInvoice": "Guardar Factura",
+    "saveInvoiceSuccess": "Factura guardada exitosamente"
   },
   "company": {
     "companyInfo": "Información de la Empresa",

@@ -1,10 +1,13 @@
 import { PDFViewer } from "@react-pdf/renderer";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import InvoicePDF from "@/components/Invoice/InvoicePDF";
 import { transformFormDataToInvoiceData } from "../../utils/invoiceTransform";
 import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Loader from "@/components/general/Loader";
+import { Button } from "@/components/ui/button";
+import SweetModal from "@/components/modals/SweetAlert";
 import type { InvoiceFormData } from "./types";
 
 // Tipo para los datos de la empresa (copiado del componente Company)
@@ -27,6 +30,8 @@ interface InvoiceViewerProps {
 
 const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   // Query para obtener los datos de la empresa (misma query del componente Company)
   const { data: companyData, isPending: loadingCompany } =
@@ -67,6 +72,62 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
     transformedCompanyData
   );
 
+  // Mutación para guardar la factura
+  const saveInvoiceMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("User not authenticated");
+
+      const { data, error } = await supabase
+        .from("invoices")
+        .insert({
+          user_id: user.id,
+          invoice_number: invoiceData.invoiceNumber,
+          client_name: invoiceData.client.name,
+          client_email: invoiceData.client.email,
+          client_phone: invoiceData.client.phone || null,
+          client_address: invoiceData.client.address || null,
+          items: invoiceData.items,
+          notes: invoiceData.notes || null,
+          total_amount: invoiceData.subtotal,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidar y refrescar la lista de facturas
+      queryClient.invalidateQueries({ queryKey: ["invoices", user?.id] });
+
+      // Mostrar mensaje de éxito
+      SweetModal(
+        "success",
+        t("common.success"),
+        t("invoice.saveInvoiceSuccess"),
+        t("common.Ok")
+      );
+    },
+    onError: (error: any) => {
+      console.error("Error saving invoice:", error);
+
+      // Mostrar mensaje de error
+      SweetModal(
+        "error",
+        t("common.error"),
+        error.message || "Error inesperado al guardar la factura",
+        t("common.Ok")
+      );
+    },
+  });
+
+  const handleSaveInvoice = () => {
+    saveInvoiceMutation.mutate();
+  };
+
   // Mostrar loader mientras se cargan los datos de la empresa
   if (loadingCompany) {
     return <Loader />;
@@ -79,6 +140,19 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
         <PDFViewer width="100%" height="100%">
           <InvoicePDF data={invoiceData} />
         </PDFViewer>
+      </div>
+
+      {/* Botón para guardar la factura */}
+      <div className="mt-6 flex justify-end">
+        <Button
+          onClick={handleSaveInvoice}
+          disabled={saveInvoiceMutation.isPending}
+          className="bg-green-600 hover:bg-green-700 text-white"
+        >
+          {saveInvoiceMutation.isPending
+            ? t("common.saving")
+            : t("invoice.saveInvoice")}
+        </Button>
       </div>
     </div>
   );
