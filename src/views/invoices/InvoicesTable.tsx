@@ -6,6 +6,10 @@ import { FileDown, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useDebounce } from "@/hooks/useDebounce";
+import { supabase } from "@/supabase/client";
 
 const TabActions = () => {
   const { t } = useTranslation();
@@ -24,17 +28,56 @@ const TabActions = () => {
 const InvoicesTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
+  const { user } = useAuth();
+
+  // Aplicar debounce a la búsqueda (300ms de delay)
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  const {
+    data: invoices,
+    isLoading: loading,
+  } = useQuery({
+    queryKey: ["invoices", user?.id, debouncedSearchQuery],
+    queryFn: async () => {
+      if (!user) return [];
+
+      let query = supabase.from("invoices").select("*").eq("user_id", user.id);
+
+      // Aplicar filtro de búsqueda si existe
+      if (debouncedSearchQuery.trim()) {
+        query = query.or(
+          `invoice_number.ilike.%${debouncedSearchQuery}%,client_name.ilike.%${debouncedSearchQuery}%,client_email.ilike.%${debouncedSearchQuery}%`
+        );
+      }
+
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data || [];
+    },
+    enabled: !!user, // Solo ejecutar si hay usuario
+  });
 
   const columns : Column[] = [
     {
-      key: "id",
-      label: "ID",
-      render: (row) => <div>{row.id || "-"}</div>,
+      key: "invoice_number",
+      label: t("invoice.invoiceNumber"),
+      render: (row) => <div className="font-mono">{row.invoice_number || "-"}</div>,
     },
     {
-      key: "customer",
+      key: "client_name",
       label: t("customers.customerName"),
-      render: (row) => <div>{row.customer}</div>,
+      render: (row) => <div>{row.client_name || "-"}</div>,
+    },
+    {
+      key: "client_email",
+      label: t("common.email"),
+      render: (row) => <div>{row.client_email || "-"}</div>,
     },
     {
       key: "created_at",
@@ -42,16 +85,16 @@ const InvoicesTable = () => {
       render: (row) => new Date(row.created_at).toLocaleDateString("es-ES"),
     },
     {
-      key: "amount",
+      key: "total_amount",
       label: t("invoice.amount"),
-      render: (row) => <div>{row.amount}</div>,
+      render: (row) => <div>${row.total_amount || 0}</div>,
     },
     {
       key: "actions",
       label: t("common.actions"),
       align: "right",
       width: "w-[100px]",
-      render: (row) => (
+      render: () => (
         <>
           <ActionTable
             icon={<FileDown />}
@@ -63,30 +106,13 @@ const InvoicesTable = () => {
     },
   ];
 
-  const invoices = [
-    {
-      id: 1,
-      customer: "John Doe",
-      amount: 100,
-      status: "paid",
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      customer: "Jane Smith",
-      amount: 200,
-      status: "pending",
-      created_at: new Date().toISOString(),
-    },
-  ];
-
   return (
     <DataTable
-      data={invoices}
+      data={invoices || []}
       columns={columns}
       title={t("navigation.invoices")}
       actions={<TabActions />}
-      loading={false}
+      loading={loading}
       searchValue={searchQuery}
       onSearchChange={setSearchQuery}
     />
