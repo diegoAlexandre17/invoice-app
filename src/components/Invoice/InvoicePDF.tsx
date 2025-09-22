@@ -240,8 +240,6 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
   };
 
   const currencySymbol = getCurrencySymbol(invoiceData?.currency);
-  
-  console.log(invoiceData)
 
   // Si no hay datos, no renderizar nada
   if (!invoiceData) {
