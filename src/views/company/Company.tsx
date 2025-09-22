@@ -526,7 +526,7 @@ const Company = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="USD">USD</SelectItem>
-                          <SelectItem value="EURO">EUR</SelectItem>
+                          <SelectItem value="EURO">EURO</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
