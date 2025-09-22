@@ -21,10 +21,10 @@
     "search": "Buscar",
     "noData": "Sin datos",
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
-    "next":"Siguiente",
-    "back":"Atrás",
-    "finish":"Finalizar",
-    "download":"Descargar",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "finish": "Finalizar",
+    "download": "Descargar",
     "actions": "Acciones"
   },
   "auth": {
@@ -58,11 +58,11 @@
     "recover": "Recuperar"
   },
   "customers": {
-    "addCustomer":"Agregar nuevo cliente",
-    "customersTitle":"Gestión de Clientes",
-    "addCustomerTxt":"Completa la información del nuevo cliente aquí",
-    "editCustomer":"Editar cliente",
-    "editCustomerTxt":"Completa la información del cliente aquí",
+    "addCustomer": "Agregar nuevo cliente",
+    "customersTitle": "Gestión de Clientes",
+    "addCustomerTxt": "Completa la información del nuevo cliente aquí",
+    "editCustomer": "Editar cliente",
+    "editCustomerTxt": "Completa la información del cliente aquí",
     "customerName": "Cliente",
     "registerDate": "Fecha de Registro",
     "phone": "Teléfono",
@@ -82,7 +82,7 @@
   },
   "invoice": {
     "title": "Factura",
-    "invoiceTxt":"Completa los datos de la factura aquí",
+    "invoiceTxt": "Completa los datos de la factura aquí",
     "newInvoice": "Nueva Factura",
     "invoiceNumber": "Número de Factura",
     "date": "Fecha",
@@ -100,7 +100,7 @@
     "item": "Item",
     "itemTotal": "Total del item:",
     "noItems": "No hay items agregados aún",
-    "preview":"Vista previa",
+    "preview": "Vista previa",
     "previewDescription": "Revisa y completa la creación de tu factura",
     "notes": "Notas",
     "notesPlaceholder": "Ingresa notas adicionales para la factura (opcional)",
@@ -108,6 +108,7 @@
     "saveInvoiceSuccess": "Factura guardada exitosamente"
   },
   "company": {
+    "currency": "Moneda",
     "companyInfo": "Información de la Empresa",
     "companyInfoTxt": "Información registrada de la empresa",
     "name": "Nombre de la Empresa",
@@ -118,7 +119,7 @@
     "saveCompanyError": "Error al guardar la información de la empresa",
     "companyLogoError": "Error al cargar el logo de la empresa"
   },
-  "errorsForm":{
+  "errorsForm": {
     "maxLength15": "El campo debe tener un máximo de 15 caracteres",
     "maxLength60": "El campo debe tener un máximo de 60 caracteres",
     "maxLength120": "El campo debe tener un máximo de 120 caracteres",

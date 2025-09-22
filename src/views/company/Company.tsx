@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Edit, Save, X, Building2 } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +14,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +37,7 @@ interface CompanyData {
   identification: string;
   phone: string;
   email: string;
+  currency?: string;
   logo?: string;
   created_at?: string;
   updated_at?: string;
@@ -38,7 +46,9 @@ interface CompanyData {
 type CompanyFormData = Omit<
   CompanyData,
   "id" | "user_id" | "created_at" | "updated_at"
->;
+> & {
+  currency: "USD" | "EURO";
+};
 
 // Zod schema for company validation
 const companySchema = z.object({
@@ -50,6 +60,7 @@ const companySchema = z.object({
     .min(1, "identificationRequired")
     .max(15, "maxLength60"),
   phone: z.string().min(1, "phoneRequired").max(15, "maxLength15"),
+  currency: z.enum(["USD", "EURO"]),
   logo: z.string().optional(),
 });
 
@@ -153,6 +164,7 @@ const Company = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
     defaultValues: {
@@ -161,6 +173,7 @@ const Company = () => {
       identification: "",
       phone: "",
       email: "",
+      currency: "USD",
       logo: "",
     },
   });
@@ -173,6 +186,7 @@ const Company = () => {
         identification: companyData.identification || "",
         phone: companyData.phone || "",
         email: companyData.email || "",
+        currency: (companyData.currency as "USD" | "EURO"),
         logo: companyData.logo || "",
       });
     }
@@ -312,6 +326,7 @@ const Company = () => {
         identification: data.identification,
         phone: data.phone,
         email: data.email,
+        currency: data.currency,
         logo: logoUrl,
       };
 
@@ -490,6 +505,41 @@ const Company = () => {
               ) : (
                 <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
                   {companyData?.email}
+                </p>
+              )}
+            </div>
+
+            {/* currency */}
+            <div className="space-y-2">
+              <Label htmlFor="currency" className="text-sm font-medium">
+                {t("company.currency")}
+              </Label>
+              {isEditing ? (
+                <div>
+                  <Controller
+                    name="currency"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger className={`w-full ${errors.currency ? "border-red-500" : ""}`}>
+                          <SelectValue placeholder="Selecciona una moneda" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="USD">USD</SelectItem>
+                          <SelectItem value="EURO">EUR</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.currency && (
+                    <TextErrorSmall
+                      error={t(`errorsForm.${errors.currency.message}`)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">
+                  {companyData?.currency}
                 </p>
               )}
             </div>
