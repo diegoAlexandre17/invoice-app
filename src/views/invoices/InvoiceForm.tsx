@@ -3,6 +3,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,8 +15,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
 import type { InvoiceFormData } from "./types";
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
+
+// Tipo para la respuesta de currency
+interface CompanyCurrency {
+  currency: string;
+}
 
 interface InvoiceFormProps {
   onNext?: (formData: InvoiceFormData) => void;
@@ -40,6 +49,34 @@ const invoiceSchema = z.object({
 
 const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+
+  // Query para obtener solo el currency de la empresa
+  const { data: companyCurrency } = useQuery<CompanyCurrency | null>({
+    queryKey: ["company-currency", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+
+      const { data, error } = await supabase
+        .from("company")
+        .select("currency")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error fetching company currency:", error);
+        throw error;
+      }
+
+      return data as CompanyCurrency | null;
+    },
+    enabled: !!user,
+    staleTime: 0, // Los datos siempre se consideran obsoletos
+    gcTime: 0, // No mantener datos en caché
+    refetchOnWindowFocus: true, // Refetch cuando la ventana reciba foco
+  });
+
+  const currencySymbol = getCurrencySymbol(companyCurrency?.currency);
 
   const {
     register,
@@ -375,7 +412,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
                         <Label className="text-xs text-gray-500">
                           {t("invoice.unitPrice") || "Precio Unitario"}
                         </Label>
-                        <p className="text-sm">${item?.unitPrice?.toFixed(2)}</p>
+                        <p className="text-sm">{currencySymbol}{item?.unitPrice?.toFixed(2)}</p>
                       </div>
                     </div>
 
@@ -385,7 +422,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
                           {t("invoice.itemTotal") || "Total del item:"}
                         </Label>
                         <p className="text-lg font-semibold text-green-600">
-                          ${calculateItemTotal(item?.quantity || 0, item?.unitPrice || 0).toFixed(2)}
+                          {currencySymbol}{calculateItemTotal(item?.quantity || 0, item?.unitPrice || 0).toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -401,7 +438,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
                       {"Subtotal:"}
                     </Label>
                     <p className="text-2xl font-bold text-green-600">
-                      ${calculateSubtotal().toFixed(2)}
+                      {currencySymbol}{calculateSubtotal().toFixed(2)}
                     </p>
                   </div>
                 </div>

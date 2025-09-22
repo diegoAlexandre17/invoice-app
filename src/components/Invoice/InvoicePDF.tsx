@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import type { InvoiceData } from "../../views/invoices/types";
 import { useTranslation } from "react-i18next";
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 
 interface InvoicePDFProps {
   data?: InvoiceData;
@@ -226,18 +227,6 @@ const styles = StyleSheet.create({
 const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
   const invoiceData = data;
   const { t } = useTranslation();
-  
-  // Función para obtener el símbolo de la moneda
-  const getCurrencySymbol = (currency?: string) => {
-    switch (currency?.toUpperCase()) {
-      case 'USD':
-        return '$';
-      case 'EURO':
-        return '€';
-      default:
-        return '$'; // Símbolo por defecto
-    }
-  };
 
   const currencySymbol = getCurrencySymbol(invoiceData?.currency);
 
