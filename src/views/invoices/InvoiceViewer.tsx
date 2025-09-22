@@ -22,6 +22,7 @@ interface CompanyData {
   logo?: string;
   created_at?: string;
   updated_at?: string;
+  currency: string;
 }
 
 interface InvoiceViewerProps {
@@ -64,6 +65,7 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
     phone: companyData?.phone,
     email: companyData?.email,
     logo: companyData?.logo ? companyData.logo : null,
+    currency: companyData?.currency,
   };
 
   // Transformar los datos del formulario a formato InvoiceData para el PDF

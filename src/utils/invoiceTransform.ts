@@ -35,6 +35,7 @@ export const transformFormDataToInvoiceData = (
     invoiceNumber,
     date: formatDate(new Date()),
     company: companyData,
+    currency: companyData?.currency,
     client: {
       id: formData.id || '',
       name: formData.name,

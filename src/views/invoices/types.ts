@@ -32,6 +32,7 @@ export interface InvoiceData {
   items: InvoiceItem[];
   subtotal: number;
   notes: string | undefined;
+  currency: string;
 }
 
 // Tipo que representa los datos del formulario de factura

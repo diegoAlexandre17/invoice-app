@@ -225,8 +225,22 @@ const styles = StyleSheet.create({
 
 const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
   const invoiceData = data;
-
   const { t } = useTranslation();
+  
+  // Función para obtener el símbolo de la moneda
+  const getCurrencySymbol = (currency?: string) => {
+    switch (currency?.toUpperCase()) {
+      case 'USD':
+        return '$';
+      case 'EURO':
+        return '€';
+      default:
+        return '$'; // Símbolo por defecto
+    }
+  };
+
+  const currencySymbol = getCurrencySymbol(invoiceData?.currency);
+  
   console.log(invoiceData)
 
   // Si no hay datos, no renderizar nada
@@ -361,12 +375,12 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
                 </View>
                 <View style={styles.priceCol}>
                   <Text style={styles.tableCellText}>
-                    {item.unitPrice.toFixed(2)} €
+                    {currencySymbol}{item.unitPrice.toFixed(2)}
                   </Text>
                 </View>
                 <View style={styles.totalCol}>
                   <Text style={styles.tableCellText}>
-                    {item.total.toFixed(2)} €
+                    {currencySymbol}{item.total.toFixed(2)}
                   </Text>
                 </View>
               </View>
@@ -382,7 +396,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => {
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>Total</Text>
                   <Text style={styles.totalAmount}>
-                    {invoiceData.subtotal.toFixed(2)} €
+                    {currencySymbol}{invoiceData.subtotal.toFixed(2)}
                   </Text>
                 </View>
               </View>
