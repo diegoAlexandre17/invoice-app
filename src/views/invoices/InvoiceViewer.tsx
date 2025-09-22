@@ -27,9 +27,13 @@ interface CompanyData {
 
 interface InvoiceViewerProps {
   formData: InvoiceFormData;
+  handlePrevious: () => void;
 }
 
-const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
+const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
+  formData,
+  handlePrevious,
+}) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -144,17 +148,26 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({ formData }) => {
         </PDFViewer>
       </div>
 
-      {/* Botón para guardar la factura */}
-      <div className="mt-6 flex justify-end">
-        <Button
-          onClick={handleSaveInvoice}
-          disabled={saveInvoiceMutation.isPending}
-          className="bg-green-600 hover:bg-green-700 text-white"
-        >
-          {saveInvoiceMutation.isPending
-            ? t("common.saving")
-            : t("invoice.saveInvoice")}
-        </Button>
+      <div className="flex justify-between">
+        {/* Botón atrás */}
+        <div className="mt-6 flex justify-end">
+          <Button type="button" onClick={handlePrevious} className="px-8 py-2">
+            {t("common.back")}
+          </Button>
+        </div>
+
+        {/* Botón para guardar la factura */}
+        <div className="mt-6 flex justify-end">
+          <Button
+            onClick={handleSaveInvoice}
+            disabled={saveInvoiceMutation.isPending}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            {saveInvoiceMutation.isPending
+              ? t("common.saving")
+              : t("invoice.saveInvoice")}
+          </Button>
+        </div>
       </div>
     </div>
   );

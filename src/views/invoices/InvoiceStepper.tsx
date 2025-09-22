@@ -53,11 +53,11 @@ const InvoiceStepper = () => {
           />
         )}
         {currentStep === 2 && formData && (
-          <InvoiceViewer formData={formData} />
+          <InvoiceViewer formData={formData} handlePrevious={handlePrevious} />
         )}
       </div>
 
-      <StepperNavigation
+      {/* <StepperNavigation
         currentStep={currentStep}
         totalSteps={steps.length}
         onNext={handleNext}
@@ -67,7 +67,7 @@ const InvoiceStepper = () => {
         }
         previousButtonText={t('common.back')}
         nextButtonDisabled={currentStep === 1} // Deshabilitar en el paso 1
-      />
+      /> */}
     </div>
   );
 };
