@@ -1,4 +1,4 @@
-import { PDFViewer } from "@react-pdf/renderer";
+import { PDFViewer, pdf } from "@react-pdf/renderer";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import InvoicePDF from "@/components/Invoice/InvoicePDF";
@@ -78,10 +78,38 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
     transformedCompanyData
   );
 
+  // Función para generar y subir PDF a Supabase Storage (bucket privado)
+  const generateAndUploadPDF = async (): Promise<string> => {
+    if (!user) throw new Error("User not authenticated");
+    
+    // Generar el PDF como blob
+    const pdfBlob = await pdf(<InvoicePDF data={invoiceData} />).toBlob();
+    
+    // Crear un nombre único para el archivo
+    const fileName = `${user.id}/invoice-${invoiceData.invoiceNumber}-${Date.now()}.pdf`;
+    
+    // Subir el PDF a Supabase Storage (bucket privado)
+    const { error } = await supabase.storage
+      .from('invoices')
+      .upload(fileName, pdfBlob, {
+        contentType: 'application/pdf',
+        upsert: false
+      });
+
+    if (error) {
+      throw new Error(`Error uploading PDF: ${error.message}`);
+    }
+
+    return fileName;
+  };
+
   // Mutación para guardar la factura
   const saveInvoiceMutation = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("User not authenticated");
+
+      // Generar y subir el PDF a Supabase Storage
+      const pdfPath = await generateAndUploadPDF();
 
       const { data, error } = await supabase
         .from("invoices")
@@ -95,6 +123,7 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
           items: invoiceData.items,
           notes: invoiceData.notes || null,
           total_amount: invoiceData.subtotal,
+          pdf_path: pdfPath, // Guardar el path del PDF
         })
         .select()
         .single();
