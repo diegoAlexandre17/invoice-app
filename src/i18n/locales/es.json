@@ -105,7 +105,8 @@
     "notes": "Notas",
     "notesPlaceholder": "Ingresa notas adicionales para la factura (opcional)",
     "saveInvoice": "Guardar Factura",
-    "saveInvoiceSuccess": "Factura guardada exitosamente"
+    "saveInvoiceSuccess": "Factura guardada exitosamente",
+    "seeInvoice": "Ver factura"
   },
   "company": {
     "currency": "Moneda",

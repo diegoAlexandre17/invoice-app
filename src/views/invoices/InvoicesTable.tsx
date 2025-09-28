@@ -2,7 +2,7 @@ import DataTable from "@/components/Table";
 import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
 import { Button } from "@/components/ui/button";
-import { FileDown, Plus } from "lucide-react";
+import { FileDown, FileSearch, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -29,14 +29,12 @@ const InvoicesTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // Aplicar debounce a la búsqueda (300ms de delay)
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-  const {
-    data: invoices,
-    isLoading: loading,
-  } = useQuery({
+  const { data: invoices, isLoading: loading } = useQuery({
     queryKey: ["invoices", user?.id, debouncedSearchQuery],
     queryFn: async () => {
       if (!user) return [];
@@ -63,11 +61,13 @@ const InvoicesTable = () => {
     enabled: !!user, // Solo ejecutar si hay usuario
   });
 
-  const columns : Column[] = [
+  const columns: Column[] = [
     {
       key: "invoice_number",
       label: t("invoice.invoiceNumber"),
-      render: (row) => <div className="font-mono">{row.invoice_number || "-"}</div>,
+      render: (row) => (
+        <div className="font-mono">{row.invoice_number || "-"}</div>
+      ),
     },
     {
       key: "client_name",
@@ -94,8 +94,15 @@ const InvoicesTable = () => {
       label: t("common.actions"),
       align: "right",
       width: "w-[100px]",
-      render: () => (
+      render: (row) => (
         <>
+          <ActionTable
+            icon={<FileSearch />}
+            onClick={() => {
+              navigate(`/admin/invoices/${row?.id}`);
+            }}
+            tooltipText={t("invoice.seeInvoice")}
+          />
           <ActionTable
             icon={<FileDown />}
             onClick={() => {}}

@@ -105,7 +105,8 @@
     "notes": "Notes",
     "notesPlaceholder": "Enter additional notes for the invoice (optional)",
     "saveInvoice": "Save Invoice",
-    "saveInvoiceSuccess": "Invoice saved successfully"
+    "saveInvoiceSuccess": "Invoice saved successfully",
+    "seeInvoice": "See Invoice"
   },
   "company": {
     "currency": "Currency",

@@ -13,6 +13,7 @@ const RessetPassword = lazy(() => import("@/views/auth/ResetPassword"));
 const Customers = lazy(() => import("@/views/customers/Customers"));
 const Company = lazy(() => import("@/views/company/Company"));
 const InvoicesTable = lazy(() => import("@/views/invoices/InvoicesTable"));
+const InvoiceDetails = lazy(() => import("@/views/invoices/InvoiceDetails"));
 
 const DefaultRoute = '/admin/dashboard'
 
@@ -54,6 +55,7 @@ const Router = () => {
         { path: "/admin/dashboard", element: <h1>Dashboard</h1> },
         { path: "/admin/invoices", element: <InvoicesTable/> },
         { path: "/admin/invoices/create", element: <InvoiceStepper /> },
+         { path: "/admin/invoices/:invoice_id", element: <InvoiceDetails /> },
         { path: "/admin/customers", element: <Customers /> },
         { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas
