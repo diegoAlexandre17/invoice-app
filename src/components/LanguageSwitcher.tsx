@@ -21,16 +21,16 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <Select value={currentLanguage} onValueChange={handleLanguageChange} >
-      <SelectTrigger className="w-full">
+    <Select value={currentLanguage} onValueChange={handleLanguageChange}>
+      <SelectTrigger className="w-full bg-foreground text-white">
         <SelectValue>
           {languages.find((lang) => lang.code === currentLanguage)?.flag}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-foreground text-white">
         {languages.map((lang) => (
           <SelectItem key={lang.code} value={lang.code}>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 ">
               <span>{lang.flag}</span>
             </span>
           </SelectItem>

@@ -80,11 +80,6 @@ export function UserDropDown() {
             </DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <LanguageSwitcher />
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>
               <LogOut />

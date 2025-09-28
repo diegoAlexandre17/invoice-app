@@ -153,6 +153,10 @@
   background-repeat: no-repeat;
 }
 
+.bg-foreground {
+  background-color: var(--color-foreground);
+}
+
 /* Container wrapper for main content */
 .content-container {
   padding: 1.5rem;
