@@ -34,6 +34,49 @@ const InvoicesTable = () => {
   // Aplicar debounce a la búsqueda (300ms de delay)
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+  // Función para descargar el PDF
+  const handleDownloadPDF = async (row: any) => {
+    if (!row.pdf_path) {
+      console.error("PDF path not found");
+      return;
+    }
+
+    try {
+      // Obtener URL firmada del PDF desde Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('invoices')
+        .createSignedUrl(row.pdf_path, 60 * 60); // URL válida por 1 hora
+
+      if (error) {
+        console.error("Error getting PDF URL:", error);
+        return;
+      }
+
+      console.log("Signed URL:", data?.signedUrl);
+
+      // Descargar el archivo usando fetch
+      const response = await fetch(data.signedUrl);
+      const blob = await response.blob();
+      
+      // Crear URL del blob y descargar
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `factura-${row.invoice_number || row.id}.pdf`;
+      
+      // Agregar el enlace al DOM, hacer clic y removerlo
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Limpiar la URL del blob
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
+  };
+
   const { data: invoices, isLoading: loading } = useQuery({
     queryKey: ["invoices", user?.id, debouncedSearchQuery],
     queryFn: async () => {
@@ -92,7 +135,7 @@ const InvoicesTable = () => {
     {
       key: "actions",
       label: t("common.actions"),
-      align: "right",
+      align: "center",
       width: "w-[100px]",
       render: (row) => (
         <>
@@ -105,7 +148,7 @@ const InvoicesTable = () => {
           />
           <ActionTable
             icon={<FileDown />}
-            onClick={() => {}}
+            onClick={() => handleDownloadPDF(row)}
             tooltipText={t("common.download")}
           />
         </>
