@@ -84,6 +84,7 @@
     "title": "Factura",
     "invoiceTxt": "Completa los datos de la factura aquí",
     "newInvoice": "Nueva Factura",
+    "createInvoice": "Crear Factura",
     "invoiceNumber": "Número de Factura",
     "date": "Fecha",
     "dueDate": "Fecha de Vencimiento",

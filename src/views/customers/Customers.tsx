@@ -1,7 +1,7 @@
 import DataTable from "@/components/Table";
 import { ActionTable } from "@/components/Table/ActionTable";
 import type { Column } from "@/components/Table/types";
-import { Plus, SquarePen, Trash } from "lucide-react";
+import { FilePlus, Plus, SquarePen, Trash } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/useDebounce";
 import SweetModal from "@/components/modals/SweetAlert";
+import { useNavigate } from "react-router-dom";
 
 const TabActions = ({
   isModalOpen,
@@ -52,6 +53,8 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const navigate = useNavigate()
 
   // Aplicar debounce a la búsqueda (300ms de delay)
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -180,6 +183,12 @@ const Customers = () => {
             icon={<Trash />}
             onClick={() => handleDeleteCustomer(row.id)}
             tooltipText={t("common.delete")}
+          />
+
+          <ActionTable
+            icon={<FilePlus />}
+            onClick={() => navigate(`/admin/invoices/create?customer=${row.id_number}`)}
+            tooltipText={t("invoice.createInvoice")}
           />
         </>
       ),

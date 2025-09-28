@@ -4,6 +4,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,7 +19,9 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
+import Loader from "@/components/general/Loader";
 import type { InvoiceFormData } from "./types";
+import type { Customers } from "../customers/types";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 
 // Tipo para la respuesta de currency
@@ -50,6 +53,33 @@ const invoiceSchema = z.object({
 const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  
+  // Obtener el customer ID desde los parámetros de la URL
+  const customerId = searchParams.get('customer');
+
+  // Query para obtener los datos del cliente si viene customer ID en la URL
+  const { data: customerData, isPending: loadingCustomer } = useQuery<Customers | null>({
+    queryKey: ["customer", customerId, user?.id],
+    queryFn: async () => {
+      if (!user || !customerId) return null;
+
+      const { data, error } = await supabase
+        .from("customers")
+        .select("*")
+        .eq("id_number", customerId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error fetching customer data:", error);
+        throw error;
+      }
+
+      return data as Customers | null;
+    },
+    enabled: !!user && !!customerId,
+  });
 
   // Query para obtener solo el currency de la empresa
   const { data: companyCurrency } = useQuery<CompanyCurrency | null>({
@@ -114,6 +144,21 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
     }
   }, [initialData, reset]);
 
+  // Rellenar el formulario con los datos del cliente desde la URL
+  useEffect(() => {
+    if (customerData && !initialData) {
+      reset({
+        name: customerData.name || "",
+        id: customerData.id_number  || "",
+        address: customerData.address || "",
+        phone: customerData.phone || "",
+        email: customerData.email || "",
+        notes: "",
+        items: [],
+      });
+    }
+  }, [customerData, initialData, reset]);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
@@ -158,6 +203,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
       return sum + calculateItemTotal(item.quantity || 0, item.unitPrice || 0);
     }, 0) || 0;
   };
+
+  // Mostrar loader mientras se cargan los datos del cliente
+  if (loadingCustomer && customerId) {
+    return <Loader />;
+  }
 
   return (
     <div>
