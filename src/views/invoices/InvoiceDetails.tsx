@@ -111,40 +111,12 @@ const InvoiceDetails = () => {
               </p>
 
               <p className="text-gray-600 mt-1">
-                <b>{t("invoice.invoiceNumber")}:</b> {invoiceData.invoice_number}
+                <b>{t("invoice.invoiceNumber")}:</b>{" "}
+                {invoiceData.invoice_number}
               </p>
             </div>
           </div>
-          {/*  <div className="text-right">
-            <p className="text-sm text-gray-500">
-              {t("common.createdAt")}: {new Date(invoiceData.created_at).toLocaleDateString("es-ES")}
-            </p>
-            <p className="text-lg font-semibold text-gray-900">
-              ${invoiceData.total_amount?.toFixed(2)}
-            </p>
-          </div> */}
         </div>
-
-        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h3 className="font-semibold text-gray-700 mb-2">{t("customers.customerInfo")}</h3>
-            <p className="text-gray-600">{invoiceData.client_name}</p>
-            <p className="text-gray-600">{invoiceData.client_email}</p>
-            {invoiceData.client_phone && (
-              <p className="text-gray-600">{invoiceData.client_phone}</p>
-            )}
-            {invoiceData.client_address && (
-              <p className="text-gray-600">{invoiceData.client_address}</p>
-            )}
-          </div>
-          
-          {invoiceData.notes && (
-            <div>
-              <h3 className="font-semibold text-gray-700 mb-2">{t("invoice.notes")}</h3>
-              <p className="text-gray-600">{invoiceData.notes}</p>
-            </div>
-          )}
-        </div> */}
       </div>
 
       {/* Previsualizador de PDF */}
@@ -186,18 +158,6 @@ const InvoiceDetails = () => {
           </div>
         </div>
       )}
-
-      {/* Botones de acción */}
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          onClick={() => window.history.back()}
-          className="px-8 py-2"
-          variant="outline"
-        >
-          {t("common.back")}
-        </Button>
-      </div>
     </div>
   );
 };
