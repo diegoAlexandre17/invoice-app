@@ -78,7 +78,15 @@
     "invoices": "Facturas",
     "clients": "Clientes",
     "settings": "Configuración",
-    "company": "Empresa"
+    "company": "Empresa",
+    "accessRestricted": "Acceso Restringido",
+    "connectionError": "Error de Conexión",
+    "companyDataRequired": "No puede acceder a esta ruta porque necesita completar los datos de su empresa",
+    "connectionErrorMessage": "No se pudo verificar la información de su empresa",
+    "tryAgainLater": "Por favor, intente nuevamente más tarde.",
+    "companyInfoRequired": "Para acceder a esta funcionalidad, primero debe configurar la información de su empresa en el sistema.",
+    "configureCompany": "Configurar Empresa",
+    "backToDashboard": "Volver al Dashboard"
   },
   "invoice": {
     "title": "Factura",

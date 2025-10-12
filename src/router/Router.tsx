@@ -1,9 +1,9 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import { lazy } from "react";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+import { CompanyProtectedRoute } from "../components/CompanyProtectedRoute";
 import MainLayout from "../components/MainLayout";
 import InvoiceStepper from "@/views/invoices/InvoiceStepper";
-
 
 const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
@@ -15,14 +15,14 @@ const Company = lazy(() => import("@/views/company/Company"));
 const InvoicesTable = lazy(() => import("@/views/invoices/InvoicesTable"));
 const InvoiceDetails = lazy(() => import("@/views/invoices/InvoiceDetails"));
 
-const DefaultRoute = '/admin/dashboard'
+const DefaultRoute = "/admin/dashboard";
 
 const Router = () => {
   let element = useRoutes([
     {
-        path: '/admin',
-        index: true,
-        element: <Navigate replace to={DefaultRoute} />
+      path: "/admin",
+      index: true,
+      element: <Navigate replace to={DefaultRoute} />,
     },
     {
       path: "/",
@@ -53,9 +53,30 @@ const Router = () => {
       ),
       children: [
         { path: "/admin/dashboard", element: <h1>Dashboard</h1> },
-        { path: "/admin/invoices", element: <InvoicesTable/> },
-        { path: "/admin/invoices/create", element: <InvoiceStepper /> },
-         { path: "/admin/invoices/:invoice_id", element: <InvoiceDetails /> },
+        {
+          path: "/admin/invoices",
+          element: (
+            <CompanyProtectedRoute>
+              <InvoicesTable />
+            </CompanyProtectedRoute>
+          ),
+        },
+        {
+          path: "/admin/invoices/create",
+          element: (
+            <CompanyProtectedRoute>
+              <InvoiceStepper />
+            </CompanyProtectedRoute>
+          ),
+        },
+        {
+          path: "/admin/invoices/:invoice_id",
+          element: (
+            <CompanyProtectedRoute>
+              <InvoiceDetails />
+            </CompanyProtectedRoute>
+          ),
+        },
         { path: "/admin/customers", element: <Customers /> },
         { path: "/admin/company", element: <Company /> },
         // Aquí puedes agregar más rutas hijas protegidas

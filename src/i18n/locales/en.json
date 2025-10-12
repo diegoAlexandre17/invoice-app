@@ -78,7 +78,15 @@
     "invoices": "Invoices",
     "clients": "Clients",
     "settings": "Settings",
-    "company": "Company"
+    "company": "Company",
+    "accessRestricted": "Access Restricted",
+    "connectionError": "Connection Error",
+    "companyDataRequired": "You cannot access this route because you need to complete your company information",
+    "connectionErrorMessage": "Could not verify your company information",
+    "tryAgainLater": "Please try again later.",
+    "companyInfoRequired": "To access this functionality, you must first configure your company information in the system.",
+    "configureCompany": "Configure Company",
+    "backToDashboard": "Back to Dashboard"
   },
   "invoice": {
     "title": "Invoice",
