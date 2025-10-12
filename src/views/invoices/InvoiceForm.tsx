@@ -167,8 +167,6 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({ onNext, initialData }) => {
   const watchedItems = watch("items");
 
   const handleNext = (data: InvoiceFormData) => {
-    console.log("Formulario válido, avanzando al siguiente paso:", data);
-    console.log("Datos del cliente:", data);
     onNext?.(data);
   };
 
