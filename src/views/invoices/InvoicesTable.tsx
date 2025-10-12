@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebounce } from "@/hooks/useDebounce";
 import { supabase } from "@/supabase/client";
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 
 const TabActions = () => {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ const InvoicesTable = () => {
     try {
       // Obtener URL firmada del PDF desde Supabase Storage
       const { data, error } = await supabase.storage
-        .from('invoices')
+        .from("invoices")
         .createSignedUrl(row.pdf_path, 60 * 60); // URL válida por 1 hora
 
       if (error) {
@@ -57,21 +58,20 @@ const InvoicesTable = () => {
       // Descargar el archivo usando fetch
       const response = await fetch(data.signedUrl);
       const blob = await response.blob();
-      
+
       // Crear URL del blob y descargar
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `factura-${row.invoice_number || row.id}.pdf`;
-      
+
       // Agregar el enlace al DOM, hacer clic y removerlo
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Limpiar la URL del blob
       window.URL.revokeObjectURL(url);
-      
     } catch (error) {
       console.error("Error downloading PDF:", error);
     }
@@ -130,7 +130,10 @@ const InvoicesTable = () => {
     {
       key: "total_amount",
       label: t("invoice.amount"),
-      render: (row) => <div>${row.total_amount || 0}</div>,
+      render: (row) => {
+        const currencySymbol = getCurrencySymbol(row?.currency);
+        return <div>{currencySymbol}{row.total_amount || 0}</div>;
+      },
     },
     {
       key: "actions",

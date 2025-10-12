@@ -9,6 +9,7 @@ import Loader from "@/components/general/Loader";
 import { Button } from "@/components/ui/button";
 import SweetModal from "@/components/modals/SweetAlert";
 import type { InvoiceFormData } from "./types";
+import { useNavigate } from "react-router-dom";
 
 // Tipo para los datos de la empresa (copiado del componente Company)
 interface CompanyData {
@@ -37,6 +38,7 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
   const { user } = useAuth();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // Query para obtener los datos de la empresa (misma query del componente Company)
   const { data: companyData, isPending: loadingCompany } =
@@ -123,9 +125,9 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
           items: invoiceData.items,
           notes: invoiceData.notes || null,
           total_amount: invoiceData.subtotal,
+          currency: invoiceData.currency,
           pdf_path: pdfPath, // Guardar el path del PDF
         })
-        .select()
         .single();
 
       if (error) {
@@ -145,6 +147,8 @@ const InvoiceViewer: React.FC<InvoiceViewerProps> = ({
         t("invoice.saveInvoiceSuccess"),
         t("common.Ok")
       );
+
+      navigate('/admin/invoices')
     },
     onError: (error: any) => {
       console.error("Error saving invoice:", error);
