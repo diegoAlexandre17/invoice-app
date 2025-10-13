@@ -5,7 +5,6 @@ import { CompanyProtectedRoute } from "../components/CompanyProtectedRoute";
 import MainLayout from "../components/MainLayout";
 import InvoiceStepper from "@/views/invoices/InvoiceStepper";
 
-const Home = lazy(() => import("../views/Home"));
 const Login = lazy(() => import("../views/auth/Login"));
 const Register = lazy(() => import("@/views/auth/Register"));
 const RecoveryPassword = lazy(() => import("@/views/auth/RecoveryPassword"));
