@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { LayoutDashboard, Handshake, Receipt, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -24,6 +25,13 @@ const items = [
 export function AppSidebar() {
   const { t } = useTranslation();
   const location = useLocation();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleMenuItemClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   return (
     <Sidebar>
@@ -39,6 +47,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <Link
                         to={item.url}
+                        onClick={handleMenuItemClick}
                         className={`transition-transform duration-200 py-4 h-12 ease-in-out hover:translate-x-1 ${
                           isActive
                             ? "bg-accent text-accent-foreground border-r-2 border-primary"
