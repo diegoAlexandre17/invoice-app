@@ -90,7 +90,7 @@ const Customers = () => {
     enabled: !!user, // Solo ejecutar si hay usuario
   });
 
-  const { mutate: deleteCustomer, isPending: isDeleting } = useMutation({
+  const { mutate: deleteCustomer } = useMutation({
     mutationFn: async (customerId: string) => {
       const { data, error } = await supabase
         .from("customers")

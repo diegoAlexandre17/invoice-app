@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
 import { useAuth } from "@/hooks/useAuth";
@@ -56,7 +56,7 @@ const RessetPassword = () => {
   const onSubmit = async (formData: RecoveryFormData) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.updateUser({
+      const { error } = await supabase.auth.updateUser({
         password: formData.password,
       });
 
@@ -122,7 +122,9 @@ const RessetPassword = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <TextErrorSmall error={t(`auth.${errors.password.message}`)} />
+                    <TextErrorSmall
+                      error={t(`auth.${errors.password.message}`)}
+                    />
                   )}
                 </div>
               </div>

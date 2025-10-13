@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Stepper, { StepperNavigation } from "@/components/ui/stepper";
+import Stepper from "@/components/ui/stepper";
 import InvoiceForm from "./InvoiceForm";
 import InvoiceViewer from "./InvoiceViewer";
 import type { InvoiceFormData } from "./types";
