@@ -211,7 +211,6 @@ const Login = () => {
                       ref={captcha}
                       sitekey={captchaKey}
                       onVerify={(token) => {
-                        console.log("verificado token", token);
                         setCaptchaToken(token);
                       }}
                     />
