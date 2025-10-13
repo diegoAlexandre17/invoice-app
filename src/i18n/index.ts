@@ -24,6 +24,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    lng: 'en', // Idioma por defecto
     fallbackLng: 'en',
     debug: process.env.NODE_ENV === 'development',
 
@@ -32,9 +33,12 @@ i18n
     },
 
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['localStorage'], // Solo usar localStorage, no detección automática
       caches: ['localStorage'],
     },
+
+    // Mapear automáticamente códigos regionales (es-419, en-US, etc.) a idiomas base (es, en, etc.)
+    load: 'languageOnly',
   });
 
 export default i18n; 
