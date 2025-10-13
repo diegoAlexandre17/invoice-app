@@ -6,11 +6,12 @@ import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 // Esquema de validación con Zod
 const recoverySchema = z.object({
@@ -19,11 +20,15 @@ const recoverySchema = z.object({
 
 // Tipo TypeScript derivado del esquema
 type RecoveryFormData = z.infer<typeof recoverySchema>;
+const captchaKey = import.meta.env.VITE_HCAPTCHA_SITEKEY;
 
 const RecoveryPassword = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+
+  const captcha = useRef<HCaptcha>(null);
 
   const {
     register,
@@ -43,6 +48,7 @@ const RecoveryPassword = () => {
       const { data, error } = await supabase.auth.resetPasswordForEmail(
         formData.email,
         {
+          captchaToken,
           redirectTo: "/reset-password",
         }
       );
@@ -69,6 +75,7 @@ const RecoveryPassword = () => {
       });
     } finally {
       setIsLoading(false);
+      captcha?.current?.resetCaptcha();
     }
   };
 
@@ -108,7 +115,6 @@ const RecoveryPassword = () => {
                   />
                   {errors.email && (
                     <TextErrorSmall error={t(`auth.${errors.email.message}`)} />
-                    
                   )}
                 </div>
               </div>
@@ -120,11 +126,22 @@ const RecoveryPassword = () => {
                 </div>
               )}
 
+              <div className="flex justify-center">
+                <HCaptcha
+                  ref={captcha}
+                  sitekey={captchaKey}
+                  onVerify={(token) => {
+                    console.log("verificado token", token);
+                    setCaptchaToken(token);
+                  }}
+                />
+              </div>
+
               <Button
                 type="submit"
                 className="w-full"
                 size="lg"
-                disabled={isLoading}
+                disabled={isLoading || !captchaToken}
               >
                 {isLoading ? t("common.loading") : t("auth.recover")}
               </Button>

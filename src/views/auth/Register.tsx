@@ -6,11 +6,12 @@ import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import SweetModal from "@/components/modals/SweetAlert";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 // Esquema de validación con Zod
 const registerSchema = z.object({
@@ -24,10 +25,14 @@ const registerSchema = z.object({
 
 // Tipo TypeScript derivado del esquema
 type RegisterFormData = z.infer<typeof registerSchema>;
+const captchaKey = import.meta.env.VITE_HCAPTCHA_SITEKEY;
 
 const Register = () => {
+  const captcha = useRef<HCaptcha>(null);
+
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
   const navigate = useNavigate();
 
   const {
@@ -51,6 +56,7 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
         options: {
+          captchaToken,
           data: {
             first_name: formData.name,
           },
@@ -79,6 +85,7 @@ const Register = () => {
       });
     } finally {
       setIsLoading(false);
+      captcha?.current?.resetCaptcha();
     }
   };
 
@@ -119,7 +126,7 @@ const Register = () => {
                     {...register("name")}
                   />
                   {errors.name && (
-                    <TextErrorSmall error= {t(`auth.${errors.name.message}`)} />
+                    <TextErrorSmall error={t(`auth.${errors.name.message}`)} />
                   )}
                 </div>
 
@@ -165,7 +172,9 @@ const Register = () => {
                     {...register("password")}
                   />
                   {errors.password && (
-                    <TextErrorSmall error={t(`auth.${errors.password.message}`)} />
+                    <TextErrorSmall
+                      error={t(`auth.${errors.password.message}`)}
+                    />
                   )}
                 </div>
               </div>
@@ -177,11 +186,22 @@ const Register = () => {
                 </div>
               )}
 
+              <div className="flex justify-center">
+                <HCaptcha
+                  ref={captcha}
+                  sitekey={captchaKey}
+                  onVerify={(token) => {
+                    console.log("verificado token", token);
+                    setCaptchaToken(token);
+                  }}
+                />
+              </div>
+
               <Button
                 type="submit"
                 className="w-full"
                 size="lg"
-                disabled={isLoading}
+                disabled={isLoading || !captchaToken}
               >
                 {isLoading ? t("common.loading") : t("auth.registerButton")}
               </Button>
