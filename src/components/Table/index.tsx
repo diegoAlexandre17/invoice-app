@@ -33,6 +33,37 @@ export default function DataTable({
     }
   };
 
+  // Componente de tarjeta para vista móvil
+  const MobileCard = ({ row, index }: { row: any; index: number }) => (
+    <Card className="mb-4">
+      <CardContent className="p-4">
+        <div className="space-y-2">
+          {columns.map((column) => {
+            // Si es la columna de acciones, no mostrar la etiqueta
+            if (column.key === "actions") {
+              return (
+                <div key={column.key} className="flex justify-end pt-2">
+                  {column.render(row, index)}
+                </div>
+              );
+            }
+            
+            return (
+              <div key={column.key} className="flex justify-between items-start">
+                <span className="text-sm font-medium text-muted-foreground min-w-0 flex-shrink-0 mr-2">
+                  {column.label}:
+                </span>
+                <div className="text-sm text-right flex-1 min-w-0">
+                  {column.render(row, index)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -70,57 +101,62 @@ export default function DataTable({
       </CardHeader>
 
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-primary text-primary-foreground">
-              {columns.map((column, index) => (
-                <TableHead
-                  key={column.key}
-                  className={`${column.width ? column.width : ""} text-${
-                    column.align || "center"
-                  } text-primary-foreground ${
-                    index === 0 ? "rounded-tl-md" : ""
-                  } ${index === columns.length - 1 ? "rounded-tr-md" : ""}`}
-                >
-                  {column.label}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
+        {loading ? (
+          <div className="py-8">
+            <Loader text={t("common.loading")} />
+          </div>
+        ) : !loading && data?.length === 0 ? (
+          <NoData />
+        ) : (
+          <>
+            {/* Vista de escritorio - Tabla normal */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-primary text-primary-foreground">
+                      {columns.map((column, index) => (
+                        <TableHead
+                          key={column.key}
+                          className={`${column.width ? column.width : ""} text-${
+                            column.align || "center"
+                          } text-primary-foreground ${
+                            index === 0 ? "rounded-tl-md" : ""
+                          } ${index === columns.length - 1 ? "rounded-tr-md" : ""}`}
+                        >
+                          {column.label}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data?.map((row, index) => (
+                      <TableRow key={row.id || index}>
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.key}
+                            className={`text-${column.align || "center"}`}
+                          >
+                            {column.render(row, index)}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
 
-          {loading ? (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={columns.length} className="py-8">
-                  <Loader text={t("common.loading")} />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          ) : !loading && data?.length === 0 ? (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={columns.length}>
-                  <NoData />
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          ) : (
-            <TableBody>
-              {data?.map((row, index) => (
-                <TableRow key={row.id || index}>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.key}
-                      className={`text-${column.align || "center"}`}
-                    >
-                      {column.render(row, index)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          )}
-        </Table>
+            {/* Vista móvil - Tarjetas */}
+            <div className="block md:hidden">
+              <div className="space-y-2">
+                {data?.map((row, index) => (
+                  <MobileCard key={row.id || index} row={row} index={index} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );
