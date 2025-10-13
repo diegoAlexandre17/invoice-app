@@ -1,8 +1,7 @@
 import Swal from "sweetalert2";
-import type { SweetAlertResult } from "sweetalert2";
 
 const types = ["error", "warning", "info", "success", "question"] as const;
-type SweetAlertType = typeof types[number];
+type SweetAlertType = (typeof types)[number];
 
 type Options = {
   customClass?: Record<string, string>;
@@ -14,7 +13,7 @@ const SweetModal = (
   title: string,
   message: string,
   buttonText: string,
-  actionAfter = (result?: SweetAlertResult) => {},
+  actionAfter = () => {},
   options: Options = {},
   closeButton: boolean = false
 ) => {
@@ -23,8 +22,10 @@ const SweetModal = (
 
   const defaultCustomClass = {
     container: "px-5",
-    confirmButton: "px-4 cursor-pointer py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-md transition-colors duration-200",
-    cancelButton: "px-4 cursor-pointer py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-md transition-colors duration-200 mx-3",
+    confirmButton:
+      "px-4 cursor-pointer py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-md transition-colors duration-200",
+    cancelButton:
+      "px-4 cursor-pointer py-2 bg-red-500 hover:bg-red-600 text-white font-medium rounded-md transition-colors duration-200 mx-3",
   };
 
   return Swal.fire({
@@ -37,7 +38,7 @@ const SweetModal = (
     buttonsStyling: false,
     reverseButtons: true,
     ...options,
-  }).then((result) => actionAfter(result));
+  }).then(() => actionAfter());
 };
 
 export default SweetModal;

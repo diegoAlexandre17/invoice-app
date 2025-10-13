@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './useAuth';
-import { checkUserHasCompany, getUserCompany } from '../utils/checkUserCompany';
+import { checkUserCompany, getUserCompany } from '../utils/checkUserCompany';
 import type { Customers } from '../views/customers/types';
 
 export const useUserCompany = () => {
@@ -24,7 +24,7 @@ export const useUserCompany = () => {
         setError(null);
 
         // Verificar si tiene empresa
-        const userHasCompany = await checkUserHasCompany(user.id);
+        const userHasCompany = await checkUserCompany(user.id);
         setHasCompany(userHasCompany);
 
         // Si tiene empresa, obtener los datos
@@ -57,7 +57,7 @@ export const useUserCompany = () => {
       setLoading(true);
       setError(null);
 
-      const userHasCompany = await checkUserHasCompany(user.id);
+      const userHasCompany = await checkUserCompany(user.id);
       setHasCompany(userHasCompany);
 
       if (userHasCompany) {

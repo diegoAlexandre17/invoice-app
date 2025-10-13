@@ -45,7 +45,7 @@ const RecoveryPassword = () => {
   const onSubmit = async (formData: RecoveryFormData) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.resetPasswordForEmail(
+      const { error } = await supabase.auth.resetPasswordForEmail(
         formData.email,
         {
           captchaToken,
