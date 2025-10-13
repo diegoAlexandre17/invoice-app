@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/supabase/client";
 import TextErrorSmall from "@/components/general/TextErrorSmall";
+import Loader from "@/components/general/Loader";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
@@ -24,6 +25,7 @@ const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   const {
     register,
@@ -38,10 +40,31 @@ const Login = () => {
     },
   });
 
+  // Verificar si el usuario ya está autenticado al cargar el componente
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.access_token) {
+          // Usuario ya está autenticado, redirigir a admin
+          navigate("/admin");
+          return;
+        }
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigate]);
+
   const onSubmit = async (formData: LoginFormData) => {
     setIsLoading(true);
     try {
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
@@ -64,10 +87,17 @@ const Login = () => {
 
   return (
     <>
-      <div className="absolute top-4 right-4">
-        <LanguageSwitcher />
-      </div>
-      <div className="min-h-screen flex">
+      {/* Mostrar loader mientras se verifica la autenticación */}
+      {isCheckingAuth ? (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <Loader />
+        </div>
+      ) : (
+        <>
+          <div className="absolute top-4 right-4">
+            <LanguageSwitcher />
+          </div>
+          <div className="min-h-screen flex">
         {/* Left Column - Background Image */}
         <div className="hidden lg:flex md:w-[60%] login-background relative">
           {/* Optional overlay or content for the image */}
@@ -179,7 +209,9 @@ const Login = () => {
             </form>
           </div>
         </div>
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };
