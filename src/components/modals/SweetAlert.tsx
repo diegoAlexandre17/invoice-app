@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import type { SweetAlertResult } from "sweetalert2";
 
 const types = ["error", "warning", "info", "success", "question"] as const;
 type SweetAlertType = (typeof types)[number];
@@ -13,7 +14,7 @@ const SweetModal = (
   title: string,
   message: string,
   buttonText: string,
-  actionAfter = () => {},
+  actionAfter = (_result?: SweetAlertResult) => {},
   options: Options = {},
   closeButton: boolean = false
 ) => {
@@ -38,7 +39,7 @@ const SweetModal = (
     buttonsStyling: false,
     reverseButtons: true,
     ...options,
-  }).then(() => actionAfter());
+  }).then((result) => actionAfter(result));
 };
 
 export default SweetModal;
