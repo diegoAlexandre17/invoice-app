@@ -32,7 +32,7 @@ const Stepper: React.FC<StepperProps> = ({
             
             return (
               <li key={step.id} className="flex items-center">
-                <div className="flex items-center">
+                <div className="flex flex-col lg:flex-row items-center">
                   <div
                     className={cn(
                       "flex items-center justify-center w-10 h-10 rounded-full border-2",
