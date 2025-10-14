@@ -28,12 +28,22 @@ const TabActions = () => {
 
 const InvoicesTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   // Aplicar debounce a la búsqueda (300ms de delay)
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  // Resetear página cuando cambie la búsqueda
+  const [actualSearchQuery, setActualSearchQuery] = useState(debouncedSearchQuery);
+  
+  if (debouncedSearchQuery !== actualSearchQuery) {
+    setCurrentPage(1);
+    setActualSearchQuery(debouncedSearchQuery);
+  }
 
   // Función para descargar el PDF
   const handleDownloadPDF = async (row: any) => {
@@ -77,12 +87,19 @@ const InvoicesTable = () => {
     }
   };
 
-  const { data: invoices, isLoading: loading } = useQuery({
-    queryKey: ["invoices", user?.id, debouncedSearchQuery],
+  const { data: invoicesData, isLoading: loading } = useQuery({
+    queryKey: ["invoices", user?.id, debouncedSearchQuery, currentPage],
     queryFn: async () => {
-      if (!user) return [];
+      if (!user) return { invoices: [], totalCount: 0 };
 
-      let query = supabase.from("invoices").select("*").eq("user_id", user.id);
+      const from = (currentPage - 1) * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      let query = supabase
+        .from("invoices")
+        .select("*", { count: "exact" })
+        .eq("user_id", user.id)
+        .range(from, to);
 
       // Aplicar filtro de búsqueda si existe
       if (debouncedSearchQuery.trim()) {
@@ -91,7 +108,7 @@ const InvoicesTable = () => {
         );
       }
 
-      const { data, error } = await query.order("created_at", {
+      const { data, error, count } = await query.order("created_at", {
         ascending: false,
       });
 
@@ -99,10 +116,26 @@ const InvoicesTable = () => {
         throw new Error(error.message);
       }
 
-      return data || [];
+      return {
+        invoices: data || [],
+        totalCount: count || 0
+      };
     },
     enabled: !!user, // Solo ejecutar si hay usuario
   });
+
+  // Extraer los datos de la respuesta
+  const invoices = invoicesData?.invoices || [];
+  const totalCount = invoicesData?.totalCount || 0;
+
+  // Función para cambiar de página
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Calcular si hay página siguiente y anterior
+  const hasNextPage = totalCount > currentPage * PAGE_SIZE;
+  const hasPreviousPage = currentPage > 1;
 
   const columns: Column[] = [
     {
@@ -168,6 +201,11 @@ const InvoicesTable = () => {
       loading={loading}
       searchValue={searchQuery}
       onSearchChange={setSearchQuery}
+      currentPage={currentPage}
+      hasNextPage={hasNextPage}
+      hasPreviousPage={hasPreviousPage}
+      onPageChange={handlePageChange}
+      totalRecords={totalCount}
     />
   );
 };
