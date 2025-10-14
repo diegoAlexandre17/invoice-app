@@ -18,4 +18,10 @@ export interface DataTableProps {
   loading?: boolean;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  // Propiedades de paginación
+  currentPage?: number;
+  hasNextPage?: boolean;
+  hasPreviousPage?: boolean;
+  onPageChange?: (page: number) => void;
+  totalRecords?: number;
 }

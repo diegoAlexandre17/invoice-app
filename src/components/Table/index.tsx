@@ -9,8 +9,9 @@ import {
 import type { DataTableProps } from "./types";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import NoData from "../general/NoData";
 import Loader from "../general/Loader";
 
@@ -24,6 +25,11 @@ export default function DataTable({
   loading = false,
   searchValue = "",
   onSearchChange,
+  currentPage = 1,
+  hasNextPage = false,
+  hasPreviousPage = false,
+  onPageChange,
+  totalRecords = 0,
 }: DataTableProps) {
   const { t } = useTranslation();
 
@@ -155,6 +161,40 @@ export default function DataTable({
                 ))}
               </div>
             </div>
+
+            {/* Paginación - Solo mostrar si hay paginación disponible */}
+            {onPageChange && (
+              <div className="flex items-center justify-between space-x-2 py-4">
+                <div className="text-muted-foreground flex-1 text-sm">
+                  {t("common.showing")} {data?.length || 0} {t("common.of")} {totalRecords} {t("common.records")}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-muted-foreground">
+                    {t("common.page")} {currentPage}
+                  </span>
+                  <div className="space-x-2">
+                    <Button
+                      onClick={() => onPageChange(currentPage - 1)}
+                      disabled={!hasPreviousPage}
+                      size="sm"
+                      variant="outline"
+                      title={t("common.previous")}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      onClick={() => onPageChange(currentPage + 1)}
+                      disabled={!hasNextPage}
+                      size="sm"
+                      variant="outline"
+                      title={t("common.next")}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
       </CardContent>

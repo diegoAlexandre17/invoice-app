@@ -53,22 +53,39 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 10;
 
   const navigate = useNavigate()
 
   // Aplicar debounce a la búsqueda (300ms de delay)
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
+  // Resetear página cuando cambie la búsqueda
+  const [actualSearchQuery, setActualSearchQuery] = useState(debouncedSearchQuery);
+  
+  if (debouncedSearchQuery !== actualSearchQuery) {
+    setCurrentPage(1);
+    setActualSearchQuery(debouncedSearchQuery);
+  }
+
   const {
-    data: customers,
+    data: customersData,
     isLoading: loading,
     refetch: refetchCustomers,
   } = useQuery({
-    queryKey: ["customers", user?.id, debouncedSearchQuery],
+    queryKey: ["customers", user?.id, debouncedSearchQuery, currentPage],
     queryFn: async () => {
-      if (!user) return [];
+      if (!user) return { customers: [], totalCount: 0 };
 
-      let query = supabase.from("customers").select("*").eq("user_id", user.id);
+      const from = (currentPage - 1) * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      let query = supabase
+        .from("customers")
+        .select("*", { count: "exact" })
+        .eq("user_id", user.id)
+        .range(from, to);
 
       // Aplicar filtro de búsqueda si existe
       if (debouncedSearchQuery.trim()) {
@@ -77,7 +94,7 @@ const Customers = () => {
         );
       }
 
-      const { data, error } = await query.order("created_at", {
+      const { data, error, count } = await query.order("created_at", {
         ascending: false,
       });
 
@@ -85,10 +102,17 @@ const Customers = () => {
         throw new Error(error.message);
       }
 
-      return data || [];
+      return {
+        customers: data || [],
+        totalCount: count || 0
+      };
     },
     enabled: !!user, // Solo ejecutar si hay usuario
   });
+
+  // Extraer los datos de la respuesta
+  const customers = customersData?.customers || [];
+  const totalCount = customersData?.totalCount || 0;
 
   const { mutate: deleteCustomer } = useMutation({
     mutationFn: async (customerId: string) => {
@@ -136,6 +160,15 @@ const Customers = () => {
       { showCancelButton: true, cancelButtonText: t('common.cancel') }
     );
   };
+
+  // Función para cambiar de página
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Calcular si hay página siguiente y anterior
+  const hasNextPage = totalCount > currentPage * PAGE_SIZE;
+  const hasPreviousPage = currentPage > 1;
 
   // Componente específico para clientes usando el DataTable genérico
 
@@ -211,6 +244,11 @@ const Customers = () => {
       loading={loading}
       searchValue={searchQuery}
       onSearchChange={setSearchQuery}
+      currentPage={currentPage}
+      hasNextPage={hasNextPage}
+      hasPreviousPage={hasPreviousPage}
+      onPageChange={handlePageChange}
+      totalRecords={totalCount}
     />
   );
 };

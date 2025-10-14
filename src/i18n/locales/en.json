@@ -25,7 +25,12 @@
     "back": "Back",
     "finish": "Finish",
     "download": "Download",
-    "actions": "Actions"
+    "actions": "Actions",
+    "showing": "Showing",
+    "of": "of",
+    "records": "records",
+    "page": "Page",
+    "previous": "Previous"
   },
   "auth": {
     "loginTitle": "Welcome Back",

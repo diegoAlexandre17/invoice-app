@@ -25,7 +25,12 @@
     "back": "Retour",
     "finish": "Terminer",
     "download": "Télécharger",
-    "actions": "Actions"
+    "actions": "Actions",
+    "showing": "Affichage",
+    "of": "de",
+    "records": "enregistrements",
+    "page": "Page",
+    "previous": "Précédent"
   },
   "auth": {
     "loginTitle": "Bon retour",

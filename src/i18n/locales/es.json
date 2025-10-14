@@ -25,7 +25,12 @@
     "back": "Atrás",
     "finish": "Finalizar",
     "download": "Descargar",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "showing": "Mostrando",
+    "of": "de",
+    "records": "registros",
+    "page": "Página",
+    "previous": "Anterior"
   },
   "auth": {
     "loginTitle": "Bienvenido de Vuelta",
